@@ -22,3 +22,8 @@ public struct Example: CustomStringConvertible {
         "[Example name: \(name) flag: \(flag), mode: \(mode), count: \(count)])"
     }
 }
+
+enum SomeError: Error, CaseIterable {
+    case catWokeUp
+    case dogGotRainedOn
+}

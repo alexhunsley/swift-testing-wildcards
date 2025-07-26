@@ -30,6 +30,13 @@ final class TestingWildcardsTests {
         print(combinations)
     }
 
+//    @Test
+//    func resultTypes() {
+//        typealias MyResult = Result<Bool, SomeError>
+//        // Results aren't mutable! Guess we could built something to instantiate it, but... meh
+//        let base = MyResult.success(true)
+//    }
+
     @Test
     func manualWildcards() {
         // MARK: - Generate All Combinations
