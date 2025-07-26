@@ -1,15 +1,16 @@
 import Foundation
-//import Testing
 
-var greeting = "Hello, playground"
-
-// this isn't quite a fit? -- Root2 will be same for all values,
-// but Value isn't. Generic limitation thing?
 public enum WildcardPath<Root2> {
     case simple(_ path: AnyWritableKeyPath<Root2>)
     case manual(_ path: OverriddenKeyPath<Root2>)
-//                _ set: (inout Root2, Any) -> Void,
-//                _ values: [Any])
+
+    static func simple(_ keyPath: WritableKeyPath<Root2, some InvariantValues>) -> Self {
+        .simple(AnyWritableKeyPath(keyPath))
+    }
+
+    static func manual<V>(_ keyPath: WritableKeyPath<Root2, V>, values: [V]) -> Self {
+        .manual(OverriddenKeyPath(keyPath, values: values))
+    }
 }
 
 public protocol InvariantValues {
@@ -55,24 +56,6 @@ public struct OverriddenKeyPath<Root> {
     }
 }
 
-//public struct OverriddenKeyPath<Root> {
-//    public let keyPath: WritableKeyPath<Root, Any>
-//    public let values: [Any]
-//
-//    public init<Value>(_ keyPath: WritableKeyPath<Root, Value>, values: [Value]) {
-//        self.keyPath = keyPath as! WritableKeyPath<Root, Any>
-//        self.values = values
-//    }
-//
-//    public static func == (lhs: OverriddenKeyPath<Root>, rhs: OverriddenKeyPath<Root>) -> Bool {
-//        lhs.keyPath == rhs.keyPath
-//    }
-//
-//    public func hash(into hasher: inout Hasher) {
-//        hasher.combine(keyPath)
-//    }
-//}
-
 public func allInvariantCombinations<T>(
     _ base: T,
     wildcardPaths: [WildcardPath<T>] = []
@@ -87,23 +70,6 @@ public func allInvariantCombinations<T>(
                 return (overridenPath.keyPath, overridenPath.set, overridenPath.values)
             }
         }
-
-
-//    // Collect all sets to permute
-//    let combined: [(PartialKeyPath<T>, (inout T, Any) -> Void, [Any])] =
-//
-//        keyPaths.map {
-//            ($0.keyPath, $0.set, $0.getAllValues())
-//        } +
-//
-//        overrides.map { override in
-//            (override.keyPath, override.set, override.values)
-//        }
-////        overrides.map { override in
-////            (override.keyPath, { (root: inout T, value: Any) in
-////                root[keyPath: override.keyPath] = value
-////            }, override.values)
-////        }
 
     // Cartesian product of values
     func product(_ sets: [[Any]]) -> [[Any]] {
@@ -125,14 +91,6 @@ public func allInvariantCombinations<T>(
 }
 
 public enum InvariantCombinator {
-//    public static func testCases<T>(
-//        from prototype: @autoclosure () -> T,
-//        keyPaths: [AnyWritableKeyPath<T>] = [],
-//        overrides: [OverriddenKeyPath<T>] = []
-//    ) -> [T] {
-//        allInvariantCombinations(prototype(), keyPaths: keyPaths, overrides: overrides)
-//    }
-
     public static func testCases<T>(
         from prototype: @autoclosure () -> T,
         wildcardPaths: [WildcardPath<T>] = []
