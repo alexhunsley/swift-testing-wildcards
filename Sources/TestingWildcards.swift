@@ -13,6 +13,7 @@ public enum WildcardPath<Root> {
     }
 }
 
+// rename? AutoKeyPath?
 public struct AnyWritableKeyPath<Root> {
     public let keyPath: PartialKeyPath<Root>
     public let set: (inout Root, Any) -> Void
@@ -49,7 +50,7 @@ public func allInvariantCombinations<T>(
     wildcardPaths: [WildcardPath<T>] = []
 ) -> [T] {
 
-    let combined: [(PartialKeyPath<T>, (inout T, Any) -> Void, [Any])] =
+    let combined: [(keyPath: PartialKeyPath<T>, set: (inout T, Any) -> Void, values: [Any])] =
         wildcardPaths.map { wildcardPath in
             switch wildcardPath {
             case let .auto(writablePath):
@@ -66,12 +67,12 @@ public func allInvariantCombinations<T>(
         }
     }
 
-    let allValueSets = combined.map { $0.2 }
+    let allValueSets = combined.map { $0.values }
 
     return product(allValueSets).map { values in
         var copy = base
         for (i, value) in values.enumerated() {
-            let setter = combined[i].1
+            let setter = combined[i].set
             setter(&copy, value)
         }
         return copy
@@ -89,8 +90,16 @@ public enum InvariantCombinator {
 
 // syntactic sugar
 
-public func anyWritable<Root, Value: InvariantValues>(
-    _ keyPath: WritableKeyPath<Root, Value>
-) -> AnyWritableKeyPath<Root> {
-    AnyWritableKeyPath(keyPath)
-}
+//public func anyWritable<Root, Value: InvariantValues>(
+//    _ keyPath: WritableKeyPath<Root, Value>
+//) -> AnyWritableKeyPath<Root> {
+//    AnyWritableKeyPath(keyPath)
+//}
+
+// nicer version, but not needed now:
+//extension WritableKeyPath<Root, Value> where Value: InvariantValues {
+//extension WritableKeyPath where Value: InvariantValues {
+//    public var anyWritable: AnyWritableKeyPath<Root> {
+//        AnyWritableKeyPath(self)
+//    }
+//}
