@@ -1,30 +1,34 @@
 import ProjectDescription
 
 let project = Project(
-    name: "InvariantProject",
+    name: "TestingWildcards",
     targets: [
         .target(
-            name: "InvariantCombinator",
+            name: "TestingWildcards",
             destinations: .iOS,
-            product: .staticLibrary,
-            bundleId: "com.example.InvariantCombinator",
-            sources: ["Sources/InvariantCombinator/**"],
+            product: .app,
+            bundleId: "dev.tuist.TestingWildcards",
+            infoPlist: .extendingDefault(
+                with: [
+                    "UILaunchScreen": [
+                        "UIColorName": "",
+                        "UIImageName": "",
+                    ],
+                ]
+            ),
+            sources: ["Sources/**"],
+            resources: ["Resources/**"],
             dependencies: []
         ),
         .target(
-            name: "InvariantCombinatorTests",
+            name: "TestingWildcardsTests",
             destinations: .iOS,
             product: .unitTests,
-            bundleId: "com.example.InvariantCombinatorTests",
-            sources: ["Tests/InvariantCombinatorTests/**"],
-            dependencies: [.target(name: "InvariantCombinator")],
-            settings: .settings(
-                base: [
-                    "ENABLE_PREVIEWS": "YES",
-                    "ENABLE_TESTING_SEARCH_PATHS": "YES",
-                    "SWIFT_ENABLE_EXPERIMENTAL_FEATURES": "EmbeddedTesting"
-                ]
-            )
-        )
+            bundleId: "dev.tuist.TestingWildcardsTests",
+            infoPlist: .default,
+            sources: ["Tests/**"],
+            resources: [],
+            dependencies: [.target(name: "TestingWildcards")]
+        ),
     ]
 )
