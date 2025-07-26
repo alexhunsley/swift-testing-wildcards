@@ -1,31 +1,17 @@
 import Foundation
 
-//public enum WildcardPath<Root2> {
-//    case simple(_ path: AnyWritableKeyPath<Root2>)
-//    case manual(_ path: OverriddenKeyPath<Root2>)
-//
-//    public static func simple(_ keyPath: WritableKeyPath<Root2, some InvariantValues>) -> Self {
-//        .simple(AnyWritableKeyPath(keyPath))
-//    }
-//
-//    public static func manual<V>(_ keyPath: WritableKeyPath<Root2, V>, values: [V]) -> Self {
-//        .manual(OverriddenKeyPath(keyPath, values: values))
-//    }
-//}
+public enum WildcardPath<Root> {
+    case auto(_ path: AnyWritableKeyPath<Root>)
+    case options(_ path: OverriddenKeyPath<Root>)
 
-public enum WildcardPath<Root2> {
-    case auto(_ path: AnyWritableKeyPath<Root2>)
-    case options(_ path: OverriddenKeyPath<Root2>)
-
-    public static func simple<V: InvariantValues>(_ keyPath: WritableKeyPath<Root2, V>) -> Self {
+    public static func simple<V: InvariantValues>(_ keyPath: WritableKeyPath<Root, V>) -> Self {
         .auto(AnyWritableKeyPath(keyPath))
     }
 
-    public static func manual<V: Hashable>(_ keyPath: WritableKeyPath<Root2, V>, values: [V]) -> Self {
+    public static func manual<V: Hashable>(_ keyPath: WritableKeyPath<Root, V>, values: [V]) -> Self {
         .options(OverriddenKeyPath(keyPath, values: values))
     }
 }
-
 
 public struct AnyWritableKeyPath<Root> {
     public let keyPath: PartialKeyPath<Root>
