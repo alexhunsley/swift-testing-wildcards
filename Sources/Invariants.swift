@@ -50,3 +50,22 @@ extension OptionSet where Self: InvariantValues, Self.RawValue: FixedWidthIntege
         fatalError("Override allOptions in \(Self.self)")
     }
 }
+
+///
+///
+
+public protocol InvariantHolder { }
+
+// extension for conforming objects, so can call like:
+//   myProto.allInvariantCombinations
+//extension InvariantValues {
+//
+// (we don't add this to InvariantValues proto because then the
+// proto type would have to provide allValues, which doesn't always make sense)
+extension InvariantHolder {
+    public func allInvariantCombinations(
+        wildcardPaths: [WildcardPath<Self>] = []
+    ) -> [Self] {
+        TestingWildcards.allInvariantCombinations(self, wildcardPaths: wildcardPaths)
+    }
+}

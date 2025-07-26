@@ -12,7 +12,7 @@ public enum Mode: CaseIterable, InvariantValues, CustomStringConvertible {
     }
 }
 
-public struct Example: CustomStringConvertible {
+public struct Example: InvariantHolder, CustomStringConvertible {
     public var name: String
     public var flag: Bool
     public var mode: Mode

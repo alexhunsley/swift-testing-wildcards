@@ -73,7 +73,7 @@ public func allInvariantCombinations<T>(
             }
         }
 
-    // Cartesian product of values
+    // Cartesian product of values (to generate all combos)
     func product(_ sets: [[Any]]) -> [[Any]] {
         sets.reduce([[]]) { acc, values in
             acc.flatMap { prefix in values.map { prefix + [$0] } }
