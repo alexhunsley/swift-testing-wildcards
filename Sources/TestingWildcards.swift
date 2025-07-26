@@ -14,15 +14,15 @@ import Foundation
 //}
 
 public enum WildcardPath<Root2> {
-    case _simple(_ path: AnyWritableKeyPath<Root2>)
-    case _manual(_ path: OverriddenKeyPath<Root2>)
+    case auto(_ path: AnyWritableKeyPath<Root2>)
+    case options(_ path: OverriddenKeyPath<Root2>)
 
     public static func simple<V: InvariantValues>(_ keyPath: WritableKeyPath<Root2, V>) -> Self {
-        ._simple(AnyWritableKeyPath(keyPath))
+        .auto(AnyWritableKeyPath(keyPath))
     }
 
     public static func manual<V: Hashable>(_ keyPath: WritableKeyPath<Root2, V>, values: [V]) -> Self {
-        ._manual(OverriddenKeyPath(keyPath, values: values))
+        .options(OverriddenKeyPath(keyPath, values: values))
     }
 }
 
@@ -66,9 +66,9 @@ public func allInvariantCombinations<T>(
     let combined: [(PartialKeyPath<T>, (inout T, Any) -> Void, [Any])] =
         wildcardPaths.map { wildcardPath in
             switch wildcardPath {
-            case let ._simple(writablePath):
+            case let .auto(writablePath):
                 return (writablePath.keyPath, writablePath.set, writablePath.getAllValues())
-            case let ._manual(overridenPath):
+            case let .options(overridenPath):
                 return (overridenPath.keyPath, overridenPath.set, overridenPath.values)
             }
         }
