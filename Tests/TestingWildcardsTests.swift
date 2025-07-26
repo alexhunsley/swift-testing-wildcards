@@ -33,23 +33,18 @@ final class TestingWildcardsTests {
         //        }
     }
 
-
     @Test(arguments:
-            InvariantCombinator.testCases(
-                from: Example(name: "bob", flag: false, mode: .alpha, count: 0),
-                keyPaths: [
-                    //                    AnyWritableKeyPath(\Example.flag),
-                    anyWritable(\Example.flag),
-//                    anyWritable(\Example.count),
-
-//                    anyWritable(\Example.mode),
-//                    anyWritable(\Example.count) // error as expected: Global function 'anyWritable' requires that 'Int' conform to 'InvariantValues'
-
-                ],
-                overrides: [
-                    OverriddenKeyPath(\.count, values: [0, 10])
-                ]
-            )
+        InvariantCombinator.testCases(
+            from: Example(name: "bob", flag: false, mode: .alpha, count: 0),
+            keyPaths: [
+//                AnyWritableKeyPath(\.flag),
+                anyWritable(\.flag),
+            ],
+            overrides: [
+                OverriddenKeyPath(\.name, values: ["alex", "goom"]),
+                OverriddenKeyPath(\.count, values: [0, 10])
+            ]
+        )
     )
     func testVariants(input: Example) {
         print("got input: \(input)")
@@ -73,7 +68,7 @@ enum Mode: CaseIterable, InvariantValues, CustomStringConvertible {
 }
 
 struct Example: CustomStringConvertible {
-    let name: String
+    var name: String
     var flag: Bool
     var mode: Mode
     var count: Int
