@@ -70,8 +70,10 @@ final class TestingWildcardsTests {
         print(combinations)
     }
 
+    /// duplication of repeated wildcards is not desirable behaivour,
+    /// but I'm tracking it here as *known* behaviour
     @Test
-    func repeatedSimpleWildcardsDoNotDuplicate() {
+    func repeatedSimpleWildcardsAreDuplicated() {
         // MARK: - Generate All Combinations
         let base = Example(name: "bob", flag: false, mode: .alpha, count: 0)
 
@@ -80,10 +82,32 @@ final class TestingWildcardsTests {
             wildcardPaths: [
                 .simple(\.flag),
                 .simple(\.flag),
+                .simple(\.mode)
             ]
         )
-        // if we have > 2 combinations, we are duplicating the same thing that was listed twice
-        #expect(combinations.count == 2)
+        // the repeated .simple(\.flag) gives us 2x2x3 = 12 combos. Ideally it wouldn't
+        // and we'd have only 6.
+        #expect(combinations.count == 12)
+    }
+
+    /// duplication of repeated wildcards is not desirable behaivour,
+    /// but I'm tracking it here as *known* behaviour
+    @Test
+    func repeatedManualWildcardsAreDuplicated() {
+        // MARK: - Generate All Combinations
+        let base = Example(name: "bob", flag: false, mode: .alpha, count: 0)
+
+        let combinations = allInvariantCombinations(
+            base,
+            wildcardPaths: [
+                .simple(\.flag),
+                .manual(\.count, values: [0, 5, 10]),
+                .manual(\.count, values: [0, 5, 10])
+            ]
+        )
+        // the repeated .manual gives us 2x3x3 = 18 combos. Ideally it wouldn't
+        // and we'd have only 6.
+        #expect(combinations.count == 18)
     }
 }
 
