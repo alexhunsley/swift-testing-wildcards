@@ -15,13 +15,14 @@ final class TestingWildcardsTests {
 
         let combinations = allInvariantCombinations(
             base,
-            keyPaths: [
-                AnyWritableKeyPath(\Example.flag),
-                AnyWritableKeyPath(\Example.mode)
+            wildcardPaths: [
+                .simple(anyWritable(\.flag)), // need the cast here? to AnyWritableKeyPath
+                .simple(anyWritable(\.mode)),
+                .manual(OverriddenKeyPath(\.count, values: [0, 5]))
             ]
         )
 
-        #expect(combinations.count == 6)
+        #expect(combinations.count == 12)
         #expect(combinations.contains(where: {
             $0.flag == false && $0.mode == .alpha
         }))
@@ -33,22 +34,32 @@ final class TestingWildcardsTests {
         //        }
     }
 
-    @Test(arguments:
-        InvariantCombinator.testCases(
-            from: Example(name: "bob", flag: false, mode: .alpha, count: 0),
-            keyPaths: [
-//                AnyWritableKeyPath(\.flag),
-                anyWritable(\.flag),
-            ],
-            overrides: [
-                OverriddenKeyPath(\.name, values: ["alex", "goom"]),
-                OverriddenKeyPath(\.count, values: [0, 10])
-            ]
-        )
-    )
-    func testVariants(input: Example) {
-        print("got input: \(input)")
-    }
+//    @Test(arguments:
+//        InvariantCombinator.testCases(
+//            from: Example(name: "bob", flag: false, mode: .alpha, count: 0),
+//            wildcardPaths:
+////            keyPaths: [
+////    //                AnyWritableKeyPath(\.flag),
+////                anyWritable(\.flag),
+////            ]
+//        )
+//
+//
+////        InvariantCombinator.testCases(
+////            from: Example(name: "bob", flag: false, mode: .alpha, count: 0),
+////            keyPaths: [
+//////                AnyWritableKeyPath(\.flag),
+////                anyWritable(\.flag),
+////            ],
+////            overrides: [
+////                OverriddenKeyPath(\.name, values: ["alex", "goom"]),
+////                OverriddenKeyPath(\.count, values: [0, 10])
+////            ]
+////        )
+//    )
+//    func testVariants(input: Example) {
+//        print("got input: \(input)")
+//    }
 }
 
 
