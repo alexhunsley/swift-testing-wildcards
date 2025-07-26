@@ -30,12 +30,12 @@ final class TestingWildcardsTests {
         print(combinations)
     }
 
-//    @Test
-//    func resultTypes() {
-//        typealias MyResult = Result<Bool, SomeError>
-//        // Results aren't mutable! Guess we could built something to instantiate it, but... meh
-//        let base = MyResult.success(true)
-//    }
+    //    @Test
+    //    func resultTypes() {
+    //        typealias MyResult = Result<Bool, SomeError>
+    //        // Results aren't mutable! Guess we could built something to instantiate it, but... meh
+    //        let base = MyResult.success(true)
+    //    }
 
     @Test
     func manualWildcards() {
@@ -116,5 +116,20 @@ final class TestingWildcardsTests {
         // the repeated .manual gives us 2x3x3 = 18 combos. Ideally it wouldn't
         // and we'd have only 6.
         #expect(combinations.count == 18)
+    }
+
+    // use the combos gen in actually Test arguments
+    @Test(arguments:
+                allInvariantCombinations(
+                Example(name: "bob", flag: false, mode: .alpha, count: 0),
+                wildcardPaths: [
+                    .simple(\.flag),
+                    .manual(\.count, values: [0, 5, 10]),
+                    .manual(\.count, values: [0, 5, 10])
+                ])
+    )
+    func repeatedManualWildcardsAreDuplicated(_ example: Example) {
+        // test something always true while invariants changing
+        #expect(example.name == "bob")
     }
 }
