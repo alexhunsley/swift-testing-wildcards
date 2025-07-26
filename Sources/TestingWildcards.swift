@@ -29,29 +29,76 @@ public struct AnyWritableKeyPath<Root> {
     }
 }
 
+public struct OverriddenKeyPath<Root> {
+    public let keyPath: PartialKeyPath<Root>
+    public let set: (inout Root, Any) -> Void
+    public let values: [Any]
+
+    public init<Value>(
+        _ path: WritableKeyPath<Root, Value>,
+        values: [Value]
+    ) {
+        self.keyPath = path
+        self.set = { root, value in
+            root[keyPath: path] = value as! Value
+        }
+        self.values = values
+    }
+}
+
+//public struct OverriddenKeyPath<Root> {
+//    public let keyPath: WritableKeyPath<Root, Any>
+//    public let values: [Any]
+//
+//    public init<Value>(_ keyPath: WritableKeyPath<Root, Value>, values: [Value]) {
+//        self.keyPath = keyPath as! WritableKeyPath<Root, Any>
+//        self.values = values
+//    }
+//
+//    public static func == (lhs: OverriddenKeyPath<Root>, rhs: OverriddenKeyPath<Root>) -> Bool {
+//        lhs.keyPath == rhs.keyPath
+//    }
+//
+//    public func hash(into hasher: inout Hasher) {
+//        hasher.combine(keyPath)
+//    }
+//}
+
 public func allInvariantCombinations<T>(
     _ base: T,
-    keyPaths: [AnyWritableKeyPath<T>],
-    valueOverrides: [PartialKeyPath<T>: () -> [Any]] = [:]
+    keyPaths: [AnyWritableKeyPath<T>] = [],
+    overrides: [OverriddenKeyPath<T>] = []
 ) -> [T] {
-    // ah of course, you must list your manual value set thing in the keyPaths
-    // or else it's not used!
-    let allValueSets: [[Any]] = keyPaths.map { keyPath in
-        valueOverrides[keyPath.keyPath]?() ?? keyPath.getAllValues()
-    }
+    // Collect all sets to permute
+    let combined: [(PartialKeyPath<T>, (inout T, Any) -> Void, [Any])] =
 
-    print("Merged value sets: \(allValueSets)")
+        keyPaths.map {
+            ($0.keyPath, $0.set, $0.getAllValues())
+        } +
 
-    func cartesianProduct(_ sets: [[Any]]) -> [[Any]] {
+        overrides.map { override in
+            (override.keyPath, override.set, override.values)
+        }
+//        overrides.map { override in
+//            (override.keyPath, { (root: inout T, value: Any) in
+//                root[keyPath: override.keyPath] = value
+//            }, override.values)
+//        }
+
+    // Cartesian product of values
+    func product(_ sets: [[Any]]) -> [[Any]] {
         sets.reduce([[]]) { acc, values in
             acc.flatMap { prefix in values.map { prefix + [$0] } }
         }
     }
 
-    return cartesianProduct(allValueSets).map { values in
+    let allValueSets = combined.map { $0.2 }
+
+    return product(allValueSets).map { values in
         var copy = base
-        for (value, keyPath) in zip(values, keyPaths) {
-            keyPath.set(&copy, value)
+        for (i, value) in values.enumerated() {
+            let setter = combined[i].1
+            setter(&copy, value)
         }
         return copy
     }
@@ -60,10 +107,10 @@ public func allInvariantCombinations<T>(
 public enum InvariantCombinator {
     public static func testCases<T>(
         from prototype: @autoclosure () -> T,
-        keyPaths: [AnyWritableKeyPath<T>],
-        valueOverrides: [PartialKeyPath<T>: () -> [Any]] = [:]
+        keyPaths: [AnyWritableKeyPath<T>] = [],
+        overrides: [OverriddenKeyPath<T>] = []
     ) -> [T] {
-        allInvariantCombinations(prototype(), keyPaths: keyPaths, valueOverrides: valueOverrides)
+        allInvariantCombinations(prototype(), keyPaths: keyPaths, overrides: overrides)
     }
 }
 

@@ -41,13 +41,13 @@ final class TestingWildcardsTests {
                     //                    AnyWritableKeyPath(\Example.flag),
                     anyWritable(\Example.flag),
 //                    anyWritable(\Example.count),
-                    
+
 //                    anyWritable(\Example.mode),
 //                    anyWritable(\Example.count) // error as expected: Global function 'anyWritable' requires that 'Int' conform to 'InvariantValues'
 
                 ],
-                valueOverrides: [
-                    \.count: { [0, 10] }
+                overrides: [
+                    OverriddenKeyPath(\.count, values: [0, 10])
                 ]
             )
     )
