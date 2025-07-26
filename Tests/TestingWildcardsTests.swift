@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+//import TestingWildcards
 @testable import TestingWildcards
 
 final class TestingWildcardsTests {
@@ -17,7 +18,7 @@ final class TestingWildcardsTests {
             base,
             wildcardPaths: [
                 .simple(\.flag),
-                .simple(anyWritable(\.mode)),
+                .simple(\.mode),
             ]
         )
 
@@ -108,30 +109,5 @@ final class TestingWildcardsTests {
         // the repeated .manual gives us 2x3x3 = 18 combos. Ideally it wouldn't
         // and we'd have only 6.
         #expect(combinations.count == 18)
-    }
-}
-
-// MARK: - Example Enum and Struct
-
-enum Mode: CaseIterable, InvariantValues, CustomStringConvertible {
-    case alpha, beta, gamma
-
-    var description: String {
-        switch self {
-        case .alpha: return "Alpha"
-        case .beta: return "Beta"
-        case .gamma: return "Gamma"
-        }
-    }
-}
-
-struct Example: CustomStringConvertible {
-    var name: String
-    var flag: Bool
-    var mode: Mode
-    var count: Int
-
-    var description: String {
-        "[Example name: \(name) flag: \(flag), mode: \(mode), count: \(count)])"
     }
 }

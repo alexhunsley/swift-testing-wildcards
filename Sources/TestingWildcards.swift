@@ -1,29 +1,31 @@
 import Foundation
 
+//public enum WildcardPath<Root2> {
+//    case simple(_ path: AnyWritableKeyPath<Root2>)
+//    case manual(_ path: OverriddenKeyPath<Root2>)
+//
+//    public static func simple(_ keyPath: WritableKeyPath<Root2, some InvariantValues>) -> Self {
+//        .simple(AnyWritableKeyPath(keyPath))
+//    }
+//
+//    public static func manual<V>(_ keyPath: WritableKeyPath<Root2, V>, values: [V]) -> Self {
+//        .manual(OverriddenKeyPath(keyPath, values: values))
+//    }
+//}
+
 public enum WildcardPath<Root2> {
-    case simple(_ path: AnyWritableKeyPath<Root2>)
-    case manual(_ path: OverriddenKeyPath<Root2>)
+    case _simple(_ path: AnyWritableKeyPath<Root2>)
+    case _manual(_ path: OverriddenKeyPath<Root2>)
 
-    static func simple(_ keyPath: WritableKeyPath<Root2, some InvariantValues>) -> Self {
-        .simple(AnyWritableKeyPath(keyPath))
+    public static func simple<V: InvariantValues>(_ keyPath: WritableKeyPath<Root2, V>) -> Self {
+        ._simple(AnyWritableKeyPath(keyPath))
     }
 
-    static func manual<V>(_ keyPath: WritableKeyPath<Root2, V>, values: [V]) -> Self {
-        .manual(OverriddenKeyPath(keyPath, values: values))
+    public static func manual<V: Hashable>(_ keyPath: WritableKeyPath<Root2, V>, values: [V]) -> Self {
+        ._manual(OverriddenKeyPath(keyPath, values: values))
     }
 }
 
-public protocol InvariantValues {
-    static var allValues: [Self] { get }
-}
-
-extension Bool: InvariantValues {
-    public static let allValues = [true, false]
-}
-
-extension InvariantValues where Self: CaseIterable {
-    public static var allValues: [Self] { Array(Self.allCases) }
-}
 
 public struct AnyWritableKeyPath<Root> {
     public let keyPath: PartialKeyPath<Root>
@@ -64,9 +66,9 @@ public func allInvariantCombinations<T>(
     let combined: [(PartialKeyPath<T>, (inout T, Any) -> Void, [Any])] =
         wildcardPaths.map { wildcardPath in
             switch wildcardPath {
-            case let .simple(writablePath):
+            case let ._simple(writablePath):
                 return (writablePath.keyPath, writablePath.set, writablePath.getAllValues())
-            case let .manual(overridenPath):
+            case let ._manual(overridenPath):
                 return (overridenPath.keyPath, overridenPath.set, overridenPath.values)
             }
         }
