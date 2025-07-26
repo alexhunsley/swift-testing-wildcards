@@ -135,8 +135,7 @@ final class TestingWildcardsTests {
 
     // use the combos gen in actually Test arguments, in base.call style
     @Test(arguments:
-            Example(name: "bob", flag: false, mode: .alpha, count: 0)
-        .allInvariantCombinations(
+        Example.allInvariantCombinations(
             wildcardPaths: [
                 .simple(\.flag),
                 .manual(\.count, values: [0, 5, 10]),

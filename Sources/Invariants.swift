@@ -1,3 +1,11 @@
+// thoughts:
+//
+// * one potential issue is that we mutate the prototype, so you need a mutable object.
+//   but the code you're testing might well take an immutable type.
+//
+//   But this tool is meant for driving Testing test cases, where you will
+//   probably construct the real type from it; so I think this mutable aspect is ok.
+
 public protocol InvariantValues {
     static var allValues: [Self] { get }
 }
@@ -54,7 +62,9 @@ extension OptionSet where Self: InvariantValues, Self.RawValue: FixedWidthIntege
 ///
 ///
 
-public protocol InvariantHolder { }
+public protocol WildcardPrototyping {
+    static var wildcardPrototype: Self { get }
+}
 
 // extension for conforming objects, so can call like:
 //   myProto.allInvariantCombinations
@@ -62,10 +72,10 @@ public protocol InvariantHolder { }
 //
 // (we don't add this to InvariantValues proto because then the
 // proto type would have to provide allValues, which doesn't always make sense)
-extension InvariantHolder {
-    public func allInvariantCombinations(
+extension WildcardPrototyping {
+    public static func allInvariantCombinations(
         wildcardPaths: [WildcardPath<Self>] = []
     ) -> [Self] {
-        TestingWildcards.allInvariantCombinations(self, wildcardPaths: wildcardPaths)
+        TestingWildcards.allInvariantCombinations(Self.wildcardPrototype, wildcardPaths: wildcardPaths)
     }
 }

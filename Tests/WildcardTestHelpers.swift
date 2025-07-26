@@ -12,7 +12,11 @@ public enum Mode: CaseIterable, InvariantValues, CustomStringConvertible {
     }
 }
 
-public struct Example: InvariantHolder, CustomStringConvertible {
+public struct Example: WildcardPrototyping, CustomStringConvertible {
+    public static var wildcardPrototype: Self {
+        .init(name: "bob", flag: true, mode: .alpha, count: 0)
+    }
+
     public var name: String
     public var flag: Bool
     public var mode: Mode
