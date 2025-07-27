@@ -1,15 +1,15 @@
 import Foundation
 
 public enum WildcardPath<Root> {
-    case auto(_ path: AnyWritableKeyPath<Root>)
-    case options(_ path: OverriddenKeyPath<Root>)
+    case wild(_ path: AnyWritableKeyPath<Root>)
+    case values(_ path: OverriddenKeyPath<Root>)
 
-    public static func simple<V: InvariantValues>(_ keyPath: WritableKeyPath<Root, V>) -> Self {
-        .auto(AnyWritableKeyPath(keyPath))
+    public static func wild<V: InvariantValues>(_ keyPath: WritableKeyPath<Root, V>) -> Self {
+        .wild(AnyWritableKeyPath(keyPath))
     }
 
-    public static func manual<V: Hashable>(_ keyPath: WritableKeyPath<Root, V>, values: [V]) -> Self {
-        .options(OverriddenKeyPath(keyPath, values: values))
+    public static func values<V: Hashable>(_ keyPath: WritableKeyPath<Root, V>, _ values: [V]) -> Self {
+        .values(OverriddenKeyPath(keyPath, values: values))
     }
 }
 
@@ -45,7 +45,11 @@ public struct OverriddenKeyPath<Root> {
     }
 }
 
-public func allInvariantCombinations<T>(
+//extension AnyObject<T> where T: InvariantValues {
+//}
+
+// should this be module only? And always must use Type.staticThing to access?
+func allInvariantCombinations<T>(
     _ base: T,
     wildcardPaths: [WildcardPath<T>] = []
 ) -> [T] {
@@ -53,9 +57,9 @@ public func allInvariantCombinations<T>(
     let combined: [(keyPath: PartialKeyPath<T>, set: (inout T, Any) -> Void, values: [Any])] =
         wildcardPaths.map { wildcardPath in
             switch wildcardPath {
-            case let .auto(writablePath):
+            case let .wild(writablePath):
                 return (writablePath.keyPath, writablePath.set, writablePath.getAllValues())
-            case let .options(overridenPath):
+            case let .values(overridenPath):
                 return (overridenPath.keyPath, overridenPath.set, overridenPath.values)
             }
         }

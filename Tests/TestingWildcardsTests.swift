@@ -17,8 +17,8 @@ final class TestingWildcardsTests {
         let combinations = allInvariantCombinations(
             base,
             wildcardPaths: [
-                .simple(\.flag),
-                .simple(\.mode),
+                .wild(\.flag),
+                .wild(\.mode),
             ]
         )
 
@@ -45,7 +45,7 @@ final class TestingWildcardsTests {
         let combinations = allInvariantCombinations(
             base,
             wildcardPaths: [
-                .manual(\.count, values: [0, 5])
+                .values(\.count, [0, 5])
             ]
         )
 
@@ -65,9 +65,9 @@ final class TestingWildcardsTests {
             base,
             wildcardPaths: [
                 //                .simple(\.flag), // TODO if you pass same flag multiple times you get repeated combos!
-                .simple(\.flag),
-                .simple(\.mode),
-                .manual(\.count, values: [0, 5])
+                .wild(\.flag),
+                .wild(\.mode),
+                .values(\.count, [0, 5])
             ]
         )
 
@@ -88,9 +88,9 @@ final class TestingWildcardsTests {
         let combinations = allInvariantCombinations(
             base,
             wildcardPaths: [
-                .simple(\.flag),
-                .simple(\.flag),
-                .simple(\.mode)
+                .wild(\.flag),
+                .wild(\.flag),
+                .wild(\.mode)
             ]
         )
         // the repeated .simple(\.flag) gives us 2x2x3 = 12 combos. Ideally it wouldn't
@@ -108,9 +108,9 @@ final class TestingWildcardsTests {
         let combinations = allInvariantCombinations(
             base,
             wildcardPaths: [
-                .simple(\.flag),
-                .manual(\.count, values: [0, 5, 10]),
-                .manual(\.count, values: [0, 5, 10])
+                .wild(\.flag),
+                .values(\.count, [0, 5, 10]),
+                .values(\.count, [0, 5, 10])
             ]
         )
         // the repeated .manual gives us 2x3x3 = 18 combos. Ideally it wouldn't
@@ -123,9 +123,9 @@ final class TestingWildcardsTests {
             allInvariantCombinations(
                 Example(name: "bob", flag: false, mode: .alpha, count: 0),
                 wildcardPaths: [
-                    .simple(\.flag),
-                    .manual(\.count, values: [0, 5, 10]),
-                    .manual(\.count, values: [0, 5, 10])
+                    .wild(\.flag),
+                    .values(\.count, [0, 5, 10]),
+                    .values(\.count, [0, 5, 10])
                 ])
     )
     func repeatedManualWildcardsAreDuplicated(_ example: Example) {
@@ -137,9 +137,9 @@ final class TestingWildcardsTests {
     @Test(arguments:
         Example.allInvariantCombinations(
             wildcardPaths: [
-                .simple(\.flag),
-                .manual(\.count, values: [0, 5, 10]),
-                .manual(\.count, values: [0, 5, 10])
+                .wild(\.flag),
+                .values(\.count, [0, 5, 10]),
+                .values(\.count, [0, 5, 10])
             ])
     )
     func repeatedManualWildcardsAreDuplicated_callStyle2(_ example: Example) {
