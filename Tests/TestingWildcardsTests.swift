@@ -237,6 +237,23 @@ final class TestingWildcardsTests {
         #expect(example.name == "bob")
     }
 
+    // Getting all the variants passed in at once!
+    // Do this by putting [ ] around the arguments and around param to func.
+    // maybe if you want to test the expect total variant count.
+    @Test(arguments:
+        [Example.variants(
+            .wild(\.flag),
+            .values(\.count, [0, 5, 10]),
+            .values(\.count, [0, 5, 10])
+        )]
+    )
+    func repeatedManualWildcardsAreDuplicated_callStyle2b(_ examples: [Example]) {
+        // test something always true while invariants changing
+//        #expect(example.name == "bob")
+        #expect(examples.count == 18)
+    }
+
+
     @Test(arguments:
         Example.variants(
             .wild(\.flag),
