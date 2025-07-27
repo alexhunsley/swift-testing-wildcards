@@ -239,17 +239,29 @@ final class TestingWildcardsTests {
 
     @Test(arguments:
             Example.variants(
-                    .wild(\.flag),
-                    .values(\.count, 10...12),
-                    .values(\.mode, [.beta, .gamma]),
-                    .values(\.a, stride(from: 2, to: 4, by: 2)),
-                    .values(\.b, stride(from: 0, through: 5, by: 3)),
-                    .values(\.c, [20, 31, 56]),
+                .wild(\.flag),
+                .values(\.count, 10...12),
+                .values(\.mode, [.beta, .gamma]),
+                .values(\.a, stride(from: 2, to: 4, by: 2)),
+                .values(\.b, stride(from: 0, through: 5, by: 3)),
+                .values(\.c, [20, 31, 56]),
             )
     )
     func valuesAsRange(_ example: Example) {
         // test something always true while invariants changing
         print("GOT: \(example)")
+        #expect(example.name == "bob")
+        #expect(10...12 ~= example.count)
+    }
+
+    @Test(arguments:
+            Example.variants(
+                    .wild(\.filePermission),
+                    .values(\.count, 10...12),
+            )
+    )
+    func optionSetValues(_ example: Example) {
+        // test something always true while invariants changing
         #expect(example.name == "bob")
         #expect(10...12 ~= example.count)
     }

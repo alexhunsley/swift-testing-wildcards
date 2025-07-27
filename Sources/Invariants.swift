@@ -28,22 +28,15 @@ extension Optional: InvariantValues where Wrapped: InvariantValues {
     }
 }
 
-// we could provide a thing for e.g. ints that provides some random values in the range (or in custom range).
+public protocol InvariantOptionSet: InvariantValues, OptionSet where RawValue: FixedWidthInteger {
+    static var allOptions: [Self] { get }
+}
 
-extension OptionSet where Self: InvariantValues, Self.RawValue: FixedWidthInteger {
-    public static var allValues: [Self] {
-        let allBits = allBitsSet().rawValue
-        return (0...allBits).compactMap { Self(rawValue: $0) }
-    }
-
-    /// Derive the max mask from combining all known options
-    private static func allBitsSet() -> Self {
-        allOptions.reduce(Self()) { $0.union($1) }
-    }
-
-    /// Should be implemented per type
-    public static var allOptions: [Self] {
-        fatalError("Override allOptions in \(Self.self)")
+extension InvariantOptionSet {
+    public static var allValues: AnySequence<Self> {
+        let all = allOptions.reduce(Self()) { $0.union($1) }
+        let max = all.rawValue
+        return AnySequence((0...max).compactMap { Self(rawValue: $0) })
     }
 }
 

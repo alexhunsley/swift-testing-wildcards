@@ -15,7 +15,7 @@ enum Mode: CaseIterable, InvariantValues, CustomStringConvertible {
     }
 }
 
-struct FilePermission: OptionSet {
+struct FilePermission: OptionSet, InvariantOptionSet {
     let rawValue: Int
 
     static let read    = FilePermission(rawValue: 1 << 0)
@@ -23,6 +23,10 @@ struct FilePermission: OptionSet {
     static let execute = FilePermission(rawValue: 1 << 2)
 
     static let all: FilePermission = [.read, .write, .execute]
+
+    public static var allOptions: [Self] {
+        [.read, .write, .execute]
+    }
 }
 
 struct Example: WildcardPrototyping, CustomStringConvertible {
@@ -45,7 +49,7 @@ struct Example: WildcardPrototyping, CustomStringConvertible {
 
 
     var description: String {
-        "[Example name: \(name) flag: \(flag), mode: \(mode), count: \(count), abc: \(a) \(b) \(c) error: \(String(describing: error))])"
+        "[Example name: \(name) flag: \(flag), mode: \(mode), count: \(count), abc: \(a) \(b) \(c) perm: \(filePermission) error: \(String(describing: error))])"
     }
 
 //    public static func callAsFunction(_ wildcardPaths: [WildcardPath<Self>]) -> [Self] {
