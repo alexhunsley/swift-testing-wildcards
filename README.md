@@ -78,7 +78,7 @@ Now take a look at this alternative:
     }
 ```
 
-The crucial part is the `RetryParam.variants` bit where we specify the values each property can take. The use of `.values` means we're explicitly giving all the possible values, and `.wild` means "use all possible values automatically"; it can only be used on types with a finite number of states like `enum` and `Bool`.
+The crucial part is the `RetryParam.variants` bit where we specify the values each property can take. The use of `.values` means we're explicitly giving all the possible values (with anything that conforms to Sequence), and `.wild` means "use all possible values automatically"; it can only be used on types with a finite number of states like `enum` and `Bool`.
 
 In order to use this technique we must define a simple mutable struct like this:
 
@@ -157,7 +157,7 @@ If you repeat one of the variant spec lines, for example:
     // ...
 ```
 
-then your generated variants will contain duplicates, which isn't ideal.
+then your generated variants will contain duplicates, which isn't ideal. If I add `Hashable` conformance to a few places this can be fixed.
 
 <!-- * `OptionSet` -->
 

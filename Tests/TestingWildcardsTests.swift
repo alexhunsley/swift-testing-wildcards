@@ -294,4 +294,20 @@ final class TestingWildcardsTests {
         // test something always true while invariants changing
         #expect(example.name == "bob")
     }
+
+// //    can't do closures easily due to hashable requirement.
+// //    could do e.g. NamedClosure hack (which takes an id string), but..
+//    @Test(arguments:
+//            Example.variants(
+//                .values(\Example.handler,
+//                         [{ x in x },
+////                         { $0 * 2 },
+////                         { $0 + 10 }
+//                         ]
+//                       )
+//            )
+//    )
+//    func testClosureExpressions() {
+//
+//    }
 }
