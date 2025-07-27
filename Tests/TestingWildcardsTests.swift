@@ -175,12 +175,12 @@ final class TestingWildcardsTests {
         #expect(example.name == "bob")
     }
 
-    // explicit list
+    // example: passing in explicit list to variants()
     @Test(arguments:
-            Example.variants([
-                .wild(\.error),
-                .wild(\.mode)
-            ])
+        Example.variants([
+            .wild(\.error),
+            .wild(\.mode)
+        ])
     )
     func usingAnOptionalError2_explicitList(_ example: Example) {
         // test something always true while invariants changing
@@ -240,6 +240,7 @@ final class TestingWildcardsTests {
     // Getting all the variants passed in at once!
     // Do this by putting [ ] around the arguments and around param to func.
     // maybe if you want to test the expect total variant count.
+    // * SEE ALSO variantsList below, which is nicer.
     @Test(arguments:
         [Example.variants(
             .wild(\.flag),
@@ -254,6 +255,21 @@ final class TestingWildcardsTests {
     }
 
 
+    // Getting all the variants passed in at once by using variantsList (instead of [ ])
+    // Do this by putting [ ] around the param to func only.
+    // maybe if you want to test the expect total variant count.
+    @Test(arguments:
+        Example.variantsList(
+            .wild(\.flag),
+            .values(\.count, [0, 5, 10]),
+            .values(\.count, [0, 5, 10])
+        )
+    )
+    func repeatedManualWildcardsAreDuplicated_callStyle2c(_ examples: [Example]) {
+        // test something always true while invariants changing
+//        #expect(example.name == "bob")
+        #expect(examples.count == 18)
+    }
     @Test(arguments:
         Example.variants(
             .wild(\.flag),

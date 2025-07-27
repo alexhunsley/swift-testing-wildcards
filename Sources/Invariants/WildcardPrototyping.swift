@@ -16,4 +16,11 @@ extension WildcardPrototyping {
     ) -> [Self] {
         TestingWildcards.allInvariantCombinations(Self.prototype, wildcardPaths: wildcardPaths)
     }
+
+    // for if you want to pass all variants as one into the test (as a list)
+    public static func variantsList(
+        _ wildcardPaths: WildcardPath<Self>...
+    ) -> [[Self]] {
+        [TestingWildcards.allInvariantCombinations(Self.prototype, wildcardPaths: wildcardPaths)]
+    }
 }
