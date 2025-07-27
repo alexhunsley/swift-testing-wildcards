@@ -34,9 +34,7 @@ public struct VariantKeyPath<Root> {
         values: S
     ) where S.Element == Value {
         self.keyPath = keyPath
-        self.set = { root, value in
-            root[keyPath: keyPath] = value as! Value
-        }
+        self.set = Self.setter(for: keyPath)
         self.values = AnySequence(values.map { $0 as Any })
     }
 
@@ -45,10 +43,18 @@ public struct VariantKeyPath<Root> {
         _ keyPath: WritableKeyPath<Root, Value>
     ) {
         self.keyPath = keyPath
-        self.set = { root, value in
-            root[keyPath: keyPath] = value as! Value
-        }
+        self.set = Self.setter(for: keyPath)
         self.values = AnySequence(Value.allValues.map { $0 as Any })
+    }
+
+    private static func setter<Value>(for keyPath: WritableKeyPath<Root, Value>) -> (inout Root, Any) -> Void {
+        return { root, value in
+            if let typed = value as? Value {
+                root[keyPath: keyPath] = typed
+            } else {
+                preconditionFailure("Type mismatch setting value at \(keyPath): expected \(Value.self), got \(type(of: value))")
+            }
+        }
     }
 }
 
@@ -61,9 +67,8 @@ func invariantCombinations<T>(
     let combined: [(keyPath: PartialKeyPath<T>, set: (inout T, Any) -> Void, values: AnySequence<Any>)] =
         wildcardPaths.map { wildcardPath in
             switch wildcardPath {
-            case let .wild(path):
-                return (path.keyPath, path.set, AnySequence(path.values))
-            case let .values(path):
+            case let .wild(path),
+                 let .values(path):
                 return (path.keyPath, path.set, path.values)
             }
         }
