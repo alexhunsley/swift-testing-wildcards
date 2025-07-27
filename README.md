@@ -94,6 +94,8 @@ In order to use this technique we must define a simple mutable struct like this:
 
 This is a kind of prototype value. Any properties your `.variants` call doesn't access get to keep their default value as defined in the prototype.
 
+If you're sure you will never want to change some prototype property you can declare it `let` to enforce that.
+
 ## What can I use .wild on?
 
 Currently `.wild` work with these types:
@@ -124,10 +126,9 @@ Yes, by using `.variantsList` instead of `.variants`, and receiving an array par
 
 ## Use outside of Testing
 
-Although this is made with Testing in mind, you can use it in any context, for example:
+Although this experiment is made with Testing in mind, you can use it in any context, for example:
 
 ```swift
-    // mutable struct with a no-param init
     struct RetryParam: WildcardPrototyping {
         var retryEnabled = true
         var retryCount = 0
@@ -141,6 +142,8 @@ Although this is made with Testing in mind, you can use it in any context, for e
         .values(\.lastAttemptErrorCode, [401, 403]),
         .wild(\.connectionStatus)
     )
+    
+    print(variants)
 ```
 
 
