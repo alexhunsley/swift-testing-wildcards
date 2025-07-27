@@ -94,6 +94,8 @@ In order to use this technique we must define a simple mutable struct like this:
 
 This is a kind of prototype value. Any properties your `.variants` call doesn't specify get to keep their default value as defined in the prototype.
 
+<!--
+
 ## Ideas
 
 * truth table outputter that makes a string with table containing all input variants and the result (it would be given some func to get that result)
@@ -124,3 +126,4 @@ Workaround: use the provided MutableResultType and then call .result on it in th
 //   probably construct the real type from it; so I think this mutable aspect is ok.
 ```
 
+-->
