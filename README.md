@@ -60,14 +60,14 @@ That arguments list is a pain though. Can you quickly see if there's a mistake? 
 Now take a look at this alternative:
 
 ```swift
-    @Test("if retry is disabled then shouldRetry always returns false", arguments: [
+    @Test("if retry is disabled then shouldRetry always returns false", arguments:
         RetryParam.variants(
             .values(\.retryEnabled, false),              // a single value
             .values(\.retryCount, 0..2),                 // an int range
             .values(\.lastAttemptErrorCode, [401, 403]), // specific int values 
             .wild(\.connectionStatus)                    // an enum
         )
-    ])
+    )
     func ifRetryDisabledThenShouldRetryAlwaysReturnFalse(retryParam: RetryParam) {
 
         bool retry = retryPolicy.shouldRetry(retryEnabled: retryParam.retryEnabled,
@@ -110,14 +110,14 @@ Currently `.wild` work with these types:
 Yes, by using `.variantsList` instead of `.variants`, and receiving an array parameter to your func, like so:
 
 ```swift
-    @Test("if retry is disabled then shouldRetry always returns false", arguments: [
+    @Test("if retry is disabled then shouldRetry always returns false", arguments:
         RetryParam.variantsList(   // NOTE we're calling .variantsList here
             .values(\.retryEnabled, false),
             .values(\.retryCount, 0..2),
             .values(\.lastAttemptErrorCode, [401, 403]),
             .wild(\.connectionStatus)
         )
-    ])
+    )
     // NOTE we're taking in [RetryParams] below
     func ifRetryDisabledThenShouldRetryAlwaysReturnFalse(retryParam: [RetryParam]) {
 ```
@@ -155,7 +155,7 @@ Such an idea could also be applied to iterators with potentially infinite values
 ## Known issues
 
 If you repeat one of the variant spec lines, for example:
-
+s
 ```swift
     let variants = RetryParam.variants(
         .values(\.retryEnabled, false),

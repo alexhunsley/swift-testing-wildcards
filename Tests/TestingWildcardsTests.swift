@@ -256,6 +256,7 @@ final class TestingWildcardsTests {
         // we can count the variants because we've passed them all in at once
         #expect(examples.count == 6)
     }
+
     @Test(arguments:
             Example.variants(
                 .wild(\.flag),
