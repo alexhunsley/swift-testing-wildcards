@@ -101,7 +101,48 @@ Currently `.wild` work with these types:
 * `Bool`
 * `enum` (simpler ones that are `CaseIterable`, i.e. no associated values)
 * `Result` (only if its success and failure types are both `.wild` compatible). You must use the provided `MutableResult` in your prototype struct and  then access the real `Result` via its `.result` property
-* `Optional` (only if its wrapped type is `.wild` compatible; you will get the nil values as well as wrapped version of all possible values)
+* `Optional` (only if its wrapped type is `.wild` compatible; its variants consist of the nil value plus all possible values of the wrapped type)
+
+## Can I get all the variants passed into my test method at the same time?
+
+Yes, by using `.variantsList` instead of `.variants`, and receiving an array parameter to your func, like so:
+
+```swift
+    @Test("if retry is disabled then shouldRetry always returns false", arguments: [
+        RetryParam.variantsList(   // NOTE we're calling .variantsList here
+            .values(\.retryEnabled, false),
+            .values(\.retryCount, 0..2),
+            .values(\.lastAttemptErrorCode, [401, 403]),
+            .wild(\.connectionStatus)
+        )
+    ])
+    // NOTE we're taking in [RetryParams] below
+    func ifRetryDisabledThenShouldRetryAlwaysReturnFalse(retryParam: [RetryParam]) async throws {
+```
+
+
+
+## Use outside of Testing
+
+Although this is made with Testing in mind, you can use it in any context, for example:
+
+```swift
+    // mutable struct with a no-param init
+    struct RetryParam: WildcardPrototyping {
+        var retryEnabled = true
+        var retryCount = 0
+        var lastAttemptErrorCode = 0
+        var connectionStatus = ConnectionStatus.offline
+    }
+    
+    let variants = RetryParam.variants(
+        .values(\.retryEnabled, false),
+        .values(\.retryCount, 0..2),
+        .values(\.lastAttemptErrorCode, [401, 403]),
+        .wild(\.connectionStatus)
+    )
+```
+
 
 <!-- * `OptionSet` -->
 
