@@ -92,7 +92,19 @@ In order to use this technique we must define a simple mutable struct like this:
     }
 ```
 
-This is a kind of prototype value. Any properties your `.variants` call doesn't specify get to keep their default value as defined in the prototype.
+This is a kind of prototype value. Any properties your `.variants` call doesn't access get to keep their default value as defined in the prototype.
+
+## What can I use .wild on?
+
+Currently `.wild` work with these types:
+
+* `Bool`
+* `enum` (simpler ones that are `CaseIterable`, i.e. no associated values)
+* `Result` (only if its success and failure types are both `.wild` compatible). You must use the provided `MutableResult` in your prototype struct and  then access the real `Result` via its `.result` property
+* `Optional` (only if its wrapped type is `.wild` compatible; you will get the nil values as well as wrapped version of all possible values)
+
+<!-- * `OptionSet` -->
+
 
 <!--
 
