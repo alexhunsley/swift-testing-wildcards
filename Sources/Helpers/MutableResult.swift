@@ -1,17 +1,13 @@
 public struct MutableResult<Success, Failure: Error> {
-    /// Holds a success value if set
     var success: Success?
 
-    /// Holds a failure value if set
     var failure: Failure?
 
-    /// Initializes as empty (neither success nor failure set)
     init(success: Success? = nil, failure: Failure? = nil) {
         self.success = success
         self.failure = failure
     }
 
-    /// Returns a standard Result, if one is representable
     var result: Result<Success, Failure>? {
         switch (success, failure) {
         case let (success?, nil):
@@ -19,7 +15,8 @@ public struct MutableResult<Success, Failure: Error> {
         case let (nil, failure?):
             return .failure(failure)
         default:
-            return nil // Ambiguous or empty
+            // Ambiguous or empty
+            return nil
         }
     }
 }

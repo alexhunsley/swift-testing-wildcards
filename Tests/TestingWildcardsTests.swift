@@ -54,7 +54,6 @@ final class TestingWildcardsTests {
         let combinations = invariantCombinations(
             base,
             wildcardPaths: [
-                //                .simple(\.flag), // TODO if you pass same flag multiple times you get repeated combos!
                 .wild(\.flag),
                 .wild(\.mode),
                 .values(\.count, [0, 5])
@@ -75,7 +74,6 @@ final class TestingWildcardsTests {
         let combinations = invariantCombinations(
             base,
             wildcardPaths: [
-                //                .simple(\.flag), // TODO if you pass same flag multiple times you get repeated combos!
                 .wild(\.error),
                 .wild(\.mode),
                 .values(\.count, [0, 5])
@@ -174,29 +172,6 @@ final class TestingWildcardsTests {
         // test something always true while invariants changing
         #expect(example.name == "bob")
     }
-
-    // triying to use filter/remove but get //  "could't type check this is reasonable time"
-    // explicit list, with `removing(where: )`
-    //    @Test(arguments:
-    //            Example.variants([
-    //                .wild(\.error),
-    //                .wild(\.mode)
-    //            ]
-    ////            .remove
-    ////            .filter { x in true }
-    //                             //  "could't type check this is reasonable time"
-    ////                .remove { ex in
-    ////                    ex.error == nil && ex.mode == Mode.alpha
-    ////                }
-    //        )
-    //    )
-    //    func usingAnOptionalError2_explicitList_usingRemoving(_ example: Example) {
-    //        // test something always true while invariants changing
-    //        #expect(example.name == "bob")
-    //        // we will never see this combo due to the 'removing'
-    ////        #expect(!(example.error == nil && example.mode == .alpha))
-    //    }
-
 
     @Test(arguments:
             invariantCombinations(

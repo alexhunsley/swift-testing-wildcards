@@ -57,7 +57,7 @@ func invariantCombinations<T>(
     wildcardPaths: [WildcardPath<T>] = []
 ) -> [T] {
 
-    // Collect keyPath/set/values as sequences
+    // we collect keyPath/set/values as sequences
     let combined: [(keyPath: PartialKeyPath<T>, set: (inout T, Any) -> Void, values: AnySequence<Any>)] =
         wildcardPaths.map { wildcardPath in
             switch wildcardPath {
@@ -68,7 +68,6 @@ func invariantCombinations<T>(
             }
         }
 
-    // Convert sequences to arrays for cartesian product
     let allValueSets: [[Any]] = combined.map { Array($0.values) }
 
     // Cartesian product
@@ -78,7 +77,6 @@ func invariantCombinations<T>(
         }
     }
 
-    // Construct output objects from value combinations
     return product(allValueSets).map { values in
         var copy = base
         for (i, value) in values.enumerated() {

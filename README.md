@@ -80,7 +80,7 @@ Now take a look at this alternative:
 
 The crucial part is the `RetryParam.variants` bit where we specify the values each property can take. The use of `.values` means we're explicitly giving all the possible values (by giving some `Sequence`), and `.wild` means "use all possible values automatically"; it can only be used on types with a finite number of states like `enum` and `Bool`.
 
-In order to use this technique we must define a simple mutable struct like this:
+In order to use this technique we must define a simple mutable struct:
 
 ```swift
     // mutable struct with a no-param init
@@ -92,9 +92,11 @@ In order to use this technique we must define a simple mutable struct like this:
     }
 ```
 
-This is a kind of prototype value. Any properties your `.variants` call doesn't access get to keep their default value as defined in the prototype.
+To conform to `WildcardPrototyping` you must have a no-param init, and if you initialise all your properties as you declare them you get that for free.
 
-If you're sure you will never want to change some prototype property you can declare it `let` to enforce that.
+This struct is a kind of prototype value. Any properties your `.variants` invocation doesn't override get to keep their default value as defined in the prototype.
+
+If you're sure you will never mutate some prototype property you can declare it `let` to enforce that.
 
 ## What can I use `.wild` on?
 
@@ -152,9 +154,7 @@ Although this experiment is made with Testing in mind, you can use it in any con
 
 1. Could add a peer macro to make it nicer to call, e.g. `@TestWildcards`.
 
-2. We could have a `.wildSample` that would allow infinite type wildcarding by making you specify a random choice function on the type and how many samples to take. (In the interests of maintaining deterministic testing the random choice should be based on the same random seed and alg each time.)
-
-Such an idea could also be applied to iterators with potentially infinite values to provide; you just give a count for how many values to take.
+2. We could have a `.wildSample` that would allow infinite type wildcarding by making you specify a random choice function on the type and how many samples to take. (In the interests of maintaining deterministic testing the random choice should be based on the same random seed and alg each time.) Such an idea could also be applied to iterators with potentially infinite values to provide; you just give a count for how many values to take.
 
 ## Known issues
 
