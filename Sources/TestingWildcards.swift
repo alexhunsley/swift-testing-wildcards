@@ -75,7 +75,13 @@ func invariantCombinations<T>(
 
     let allValueSets: [[Any]] = combined.map { Array($0.values) }
 
-    // Cartesian product
+    // Estimate total number of combinations
+    let estimatedCount = allValueSets.reduce(1) { $0 * max($1.count, 1) }
+    print("estimated count: \(estimatedCount), from allValueSets = \(allValueSets)")
+
+    precondition(estimatedCount <= 10_000, "Too many combinations: \(estimatedCount)")
+
+    // cartesian product
     func product(_ sets: [[Any]]) -> [[Any]] {
         sets.reduce([[]]) { acc, values in
             acc.flatMap { prefix in values.map { prefix + [$0] } }
