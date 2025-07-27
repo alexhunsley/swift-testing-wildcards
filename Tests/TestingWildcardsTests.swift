@@ -14,7 +14,7 @@ final class TestingWildcardsTests {
         // MARK: - Generate All Combinations
         let base = Example(name: "bob", flag: false, mode: .alpha, count: 0)
 
-        let combinations = allInvariantCombinations(
+        let combinations = invariantCombinations(
             base,
             wildcardPaths: [
                 .wild(\.flag),
@@ -33,7 +33,7 @@ final class TestingWildcardsTests {
         // MARK: - Generate All Combinations
         let base = Example(name: "bob", flag: false, mode: .alpha, count: 0)
 
-        let combinations = allInvariantCombinations(
+        let combinations = invariantCombinations(
             base,
             wildcardPaths: [
                 .values(\.count, [0, 5])
@@ -51,7 +51,7 @@ final class TestingWildcardsTests {
         // MARK: - Generate All Combinations
         let base = Example(name: "bob", flag: false, mode: .alpha, count: 0)
 
-        let combinations = allInvariantCombinations(
+        let combinations = invariantCombinations(
             base,
             wildcardPaths: [
                 //                .simple(\.flag), // TODO if you pass same flag multiple times you get repeated combos!
@@ -72,7 +72,7 @@ final class TestingWildcardsTests {
         // MARK: - Generate All Combinations
         let base = Example(name: "bob", flag: false, mode: .alpha, count: 0)
 
-        let combinations = allInvariantCombinations(
+        let combinations = invariantCombinations(
             base,
             wildcardPaths: [
                 //                .simple(\.flag), // TODO if you pass same flag multiple times you get repeated combos!
@@ -95,7 +95,7 @@ final class TestingWildcardsTests {
         // MARK: - Generate All Combinations
         let base = Example(name: "bob", flag: false, mode: .alpha, count: 0)
 
-        let combinations = allInvariantCombinations(
+        let combinations = invariantCombinations(
             base,
             wildcardPaths: [
                 .wild(\.flag),
@@ -115,7 +115,7 @@ final class TestingWildcardsTests {
         // MARK: - Generate All Combinations
         let base = Example(name: "bob", flag: false, mode: .alpha, count: 0)
 
-        let combinations = allInvariantCombinations(
+        let combinations = invariantCombinations(
             base,
             wildcardPaths: [
                 .wild(\.flag),
@@ -139,7 +139,7 @@ final class TestingWildcardsTests {
 
     // using the top level allInvariantCombinations() -- not as nice as later ones!
     @Test(arguments:
-            allInvariantCombinations(
+            invariantCombinations(
                 Example(name: "bob", flag: false, mode: .alpha, count: 0),
                 wildcardPaths: [
                     .wild(\.error),
@@ -199,7 +199,7 @@ final class TestingWildcardsTests {
 
 
     @Test(arguments:
-            allInvariantCombinations(
+            invariantCombinations(
                 Example(name: "bob", flag: false, mode: .alpha, count: 0),
                 wildcardPaths: [
                     .wild(\.flag),

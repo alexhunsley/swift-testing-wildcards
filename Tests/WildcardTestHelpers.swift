@@ -51,11 +51,6 @@ struct Example: WildcardPrototyping, CustomStringConvertible {
     var description: String {
         "[Example name: \(name) flag: \(flag), mode: \(mode), count: \(count), abc: \(a) \(b) \(c) perm: \(filePermission) result: \(mutableResult) error: \(String(describing: error))])"
     }
-
-//    public static func callAsFunction(_ wildcardPaths: [WildcardPath<Self>]) -> [Self] {
-//        TestingWildcards.allInvariantCombinations(Self.prototype, wildcardPaths: wildcardPaths)
-//    }
-
 }
 
 enum SomeError: Error, InvariantValues, CaseIterable {
