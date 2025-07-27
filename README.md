@@ -78,7 +78,7 @@ Now take a look at this alternative:
     }
 ```
 
-The crucial part is the `RetryParam.variants` bit where we specify the values each property can take. The use of `.values` means we're explicitly giving all the possible values, and `.wild` means "use all possible values automatically"; it can only be used on certain types with finite states like enums and bools.
+The crucial part is the `RetryParam.variants` bit where we specify the values each property can take. The use of `.values` means we're explicitly giving all the possible values, and `.wild` means "use all possible values automatically"; it can only be used on types with a finite number states like `enum` and `Bool`.
 
 In order to use this technique we must define a simple mutable struct like this:
 
