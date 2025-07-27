@@ -1,6 +1,6 @@
 @testable import TestingWildcards
 
-enum Mode: CaseIterable, InvariantValues, CustomStringConvertible {
+enum Mode: CaseIterable, Equatable, InvariantValues, CustomStringConvertible {
     case alpha, beta, gamma
 
     var description: String {
@@ -12,7 +12,7 @@ enum Mode: CaseIterable, InvariantValues, CustomStringConvertible {
     }
 }
 
-struct FilePermission: OptionSet, InvariantOptionSet {
+struct FilePermission: OptionSet, Equatable, InvariantOptionSet {
     let rawValue: Int
 
     static let read    = FilePermission(rawValue: 1 << 0)
@@ -26,8 +26,7 @@ struct FilePermission: OptionSet, InvariantOptionSet {
     }
 }
 
-struct Example: WildcardPrototyping, CustomStringConvertible {
-    
+struct Example: WildcardPrototyping, CustomStringConvertible, Equatable {
     // recommended pattern -- set all properties values to default
     var name: String = "bob"
     var flag: Bool = false
@@ -47,7 +46,7 @@ struct Example: WildcardPrototyping, CustomStringConvertible {
     }
 }
 
-enum SomeError: Error, InvariantValues, CaseIterable {
+enum SomeError: Error, Equatable, InvariantValues, CaseIterable {
     case catWokeUp
     case dogGotRainedOn
 }

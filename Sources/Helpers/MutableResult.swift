@@ -1,4 +1,4 @@
-public struct MutableResult<Success, Failure: Error> {
+public struct MutableResult<Success, Failure: Error>: Equatable where Success: Equatable, Failure: Equatable {
     var success: Success?
 
     var failure: Failure?
