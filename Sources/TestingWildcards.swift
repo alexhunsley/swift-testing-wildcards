@@ -8,8 +8,9 @@ public enum WildcardPath<Root> {
         .wild(AnyWritableKeyPath(keyPath))
     }
 
-    public static func values<V: Hashable>(_ keyPath: WritableKeyPath<Root, V>, _ values: [V]) -> Self {
-        .values(OverriddenKeyPath(keyPath, values: values))
+    public static func values<V: Hashable, S: Sequence>(_ keyPath: WritableKeyPath<Root, V>, _ values: S) -> Self where S.Element == V {
+        let sequence = AnySequence(values)
+        return .values(OverriddenKeyPath(keyPath, values: sequence))
     }
 }
 
@@ -33,17 +34,17 @@ public struct AnyWritableKeyPath<Root> {
 public struct OverriddenKeyPath<Root> {
     public let keyPath: PartialKeyPath<Root>
     public let set: (inout Root, Any) -> Void
-    public let values: [Any]
+    public let values: AnySequence<Any>
 
-    public init<Value>(
+    public init<Value, S: Sequence>(
         _ path: WritableKeyPath<Root, Value>,
-        values: [Value]
-    ) {
+        values: S
+    ) where S.Element == Value {
         self.keyPath = path
         self.set = { root, value in
             root[keyPath: path] = value as! Value
         }
-        self.values = values
+        self.values = AnySequence(values.map { $0 as Any })
     }
 }
 
@@ -62,7 +63,11 @@ func allInvariantCombinations<T>(
             case let .wild(writablePath):
                 return (writablePath.keyPath, writablePath.set, writablePath.getAllValues())
             case let .values(overridenPath):
-                return (overridenPath.keyPath, overridenPath.set, overridenPath.values)
+                return (
+                    overridenPath.keyPath,
+                    overridenPath.set,
+                    Array(overridenPath.values)
+                )
             }
         }
 

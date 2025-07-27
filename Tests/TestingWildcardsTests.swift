@@ -236,4 +236,18 @@ final class TestingWildcardsTests {
         // test something always true while invariants changing
         #expect(example.name == "bob")
     }
+
+    @Test(arguments:
+            allInvariantCombinations(
+                Example(name: "bob", flag: false, mode: .alpha, count: 0),
+                wildcardPaths: [
+                    .wild(\.flag),
+                    .values(\.count, 0...2),
+                ])
+    )
+    func valuesAsRange(_ example: Example) {
+        // test something always true while invariants changing
+        #expect(example.name == "bob")
+        #expect(0...2 ~= example.count)
+    }
 }
