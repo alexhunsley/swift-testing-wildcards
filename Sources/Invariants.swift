@@ -74,16 +74,37 @@ public protocol WildcardPrototyping {
 // proto type would have to provide allValues, which doesn't always make sense)
 extension WildcardPrototyping {
     public static func variants(
-        _ wildcardPaths: [WildcardPath<Self>] = []
+        _ wildcardPaths: WildcardPath<Self>...
     ) -> [Self] {
         TestingWildcards.allInvariantCombinations(Self.prototype, wildcardPaths: wildcardPaths)
     }
 
+    public static func variants(
+        _ wildcardPaths: [WildcardPath<Self>]
+//        removing: ((Self) -> Bool)? = nil
+    ) -> [Self] {
+        TestingWildcards.allInvariantCombinations(Self.prototype, wildcardPaths: wildcardPaths)
+//        let variants = TestingWildcards.allInvariantCombinations(Self.prototype, wildcardPaths: wildcardPaths)
+//        guard let removing else {
+//            return variants
+//        }
+//        return variants.filter(not(removing))
+    }
+
     // doesn't work! Compiler can't handle the Example( ... wilds) form at call site. It's
     // not the clearest, to be fair.
-//    public static func callAsFunction(_ wildcardPaths: [WildcardPath<Self>]) -> [Self] {
+//    public static func callAsFunction(_ wildcardPaths: WildcardPath<Self>...) -> [Self] {
 //        TestingWildcards.allInvariantCombinations(Self.prototype, wildcardPaths: wildcardPaths)
 //    }    
-    // want way to say simply `Example(.wild, etc...)`
-//    public var
+}
+
+//func not<T>(_ predicate: @escaping (T) -> Bool) -> (T) -> Bool {
+//    { !predicate($0) }
+//}
+
+extension Sequence {
+    /// Returns a new sequence with the elements that do *not* match the given predicate.
+    func remove(_ predicate: (Element) throws -> Bool) rethrows -> [Element] {
+        try self.filter { try !predicate($0) }
+    }
 }

@@ -149,6 +149,7 @@ final class TestingWildcardsTests {
     // and manually loop over them, but then we lose the power of the results
     // listing each combo.
 
+    // using the top level allInvariantCombinations() -- not as nice as later ones!
     @Test(arguments:
             allInvariantCombinations(
                 Example(name: "bob", flag: false, mode: .alpha, count: 0),
@@ -162,18 +163,51 @@ final class TestingWildcardsTests {
         #expect(example.name == "bob")
     }
 
-    // use the callAsFunction version (ergonomic).
-    //   -- doesn't want to work?!
+    // variadic
+    @Test(arguments:
+            Example.variants(
+                .wild(\.error),
+                .wild(\.mode)
+            )
+    )
+    func usingAnOptionalError2_variadic(_ example: Example) {
+        // test something always true while invariants changing
+        #expect(example.name == "bob")
+    }
+
+    // explicit list
     @Test(arguments:
             Example.variants([
                 .wild(\.error),
                 .wild(\.mode)
             ])
     )
-    func usingAnOptionalError2(_ example: Example) {
+    func usingAnOptionalError2_explicitList(_ example: Example) {
         // test something always true while invariants changing
         #expect(example.name == "bob")
     }
+
+// triying to use filter/remove but get //  "could't type check this is reasonable time"
+    // explicit list, with `removing(where: )`
+//    @Test(arguments:
+//            Example.variants([
+//                .wild(\.error),
+//                .wild(\.mode)
+//            ]
+////            .remove
+////            .filter { x in true }
+//                             //  "could't type check this is reasonable time"
+////                .remove { ex in
+////                    ex.error == nil && ex.mode == Mode.alpha
+////                }
+//        )
+//    )
+//    func usingAnOptionalError2_explicitList_usingRemoving(_ example: Example) {
+//        // test something always true while invariants changing
+//        #expect(example.name == "bob")
+//        // we will never see this combo due to the 'removing'
+////        #expect(!(example.error == nil && example.mode == .alpha))
+//    }
 
 
     @Test(arguments:
@@ -192,11 +226,11 @@ final class TestingWildcardsTests {
 
     // use the combos gen in actually Test arguments, in base.call style
     @Test(arguments:
-        Example.variants([
+        Example.variants(
                 .wild(\.flag),
                 .values(\.count, [0, 5, 10]),
                 .values(\.count, [0, 5, 10])
-            ])
+            )
     )
     func repeatedManualWildcardsAreDuplicated_callStyle2(_ example: Example) {
         // test something always true while invariants changing
@@ -207,10 +241,10 @@ final class TestingWildcardsTests {
     // trying more ergonomic format using the prototype
 
     @Test(arguments:
-            Example.variants([
+            Example.variants(
                     .wild(\.error),
                     .wild(\.mode)
-                ])
+                )
     )
     func usingThePrototype_forErgonomics(_ example: Example) {
         // test something always true while invariants changing

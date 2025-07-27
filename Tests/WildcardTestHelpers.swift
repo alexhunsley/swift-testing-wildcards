@@ -1,6 +1,9 @@
 @testable import TestingWildcards
 
+// could I make my own protocol based on CaseIterable but which adds iterable over
+// associated types that are CaseIterable?
 public enum Mode: CaseIterable, InvariantValues, CustomStringConvertible {
+//    case alpha, beta, gamma(Bool)
     case alpha, beta, gamma
 
     public var description: String {
