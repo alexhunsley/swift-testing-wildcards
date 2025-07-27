@@ -1,14 +1,98 @@
 
 # Swift Testing: a wildcard helper for testing invariants
 
-This is an experimental tool for writing exhaustive Testing methods.
+This is an experimental tool for writing exhaustive tests in the Testing framework.
 
-The idea is to make Testing tests easier to write, and easier to read.
+The idea is to make tests easier to write, and easier to read, by making the intentions around invariant testing easy to state and quite explicit.
+
+If the word 'invariants' doesn't mean much to you, just think of wildcards and see the example below.
 
 ## Example
 
-asfas
+Suppose you've writing tests for an `HTTPRetrier` type. In Swift Testing you might write the following:
 
+```swift
+    @Test("if retry is disabled then shouldRetry always returns false", arguments: [
+        (false, 0, 401, .offline),
+        (false, 1, 401, .offline),
+        (false, 2, 401, .offline),
+        (true, 0, 401, .offline),
+        (true, 1, 401, .offline),
+        (true, 2, 401, .offline),
+        (false, 0, 403, .offline),
+        (false, 1, 403, .offline),
+        (false, 2, 403, .offline),
+        (true, 0, 403, .offline),
+        (true, 1, 403, .offline),
+        (true, 2, 403, .offline),
+        (false, 0, 401, .online),
+        (false, 1, 401, .online),
+        (false, 2, 401, .online),
+        (true, 0, 401, .online),
+        (true, 1, 401, .online),
+        (true, 2, 401, .online),
+        (false, 0, 403, .online),
+        (false, 1, 403, .online),
+        (false, 2, 403, .online),
+        (true, 0, 403, .online),
+        (true, 1, 403, .online),
+        (true, 2, 403, .online),
+    ])
+    func ifRetryDisabledThenShouldRetryAlwaysReturnFalse(retryEnabled: Bool,
+                                              retryCount: Int,
+                                              lastAttemptErrorCode: Int,
+                                              connectionStatus: ConnectionStatus) async throws {
+
+        bool shouldRetry = retryPolicy.shouldRetry(retryEnabled: retryEnabled,
+                                                   retryCount: retryCount,
+                                                   lastAttemptErrorCode: lastAttemptErrorCode,
+                                                   connectionStatus: connectionStatus)
+        #expect(shouldRetry == false)
+    }
+```
+
+Ugh, that arguments list!
+
+So what's we're doing here is trying all variations of the parameters that don't matter -- we want to know that the only thing that affects the outcome is the value of `retryEnabled`, so we try all possible values of the other things too.
+
+That arguments list is a pain though. Can you quickly see if there's a mistake? Can you quickly see the exact intent?
+
+Now take a look at this alternative:
+
+```swift
+    @Test("if retry is disabled then should never retry", arguments: [
+        RetryParam.variants(
+            .values(\.retryEnabled, false),              // a single value
+            .values(\.retryCount, 0..2),                 // an int range
+            .values(\.lastAttemptErrorCode, [401, 403]), // specific int values 
+            .wild(\.connectionStatus)                    // an enum
+        )
+    ])
+    func ifRetryDisabledThenShouldNeverRetry(retryParam: RetryParam) async throws {
+
+        bool retry = retryPolicy.shouldRetry(retryEnabled: retryParam.retryEnabled,
+                                             retryCount: retryParam.retryCount,
+                                             connectionStatus: retryParam.retryCount,
+                                             lastAttemptErrorCode: retryParam.lastAttemptErrorCode)
+        #expect(retry == false)
+    }
+```
+
+The crucial part os the `RetryParam.variants` bit where we say what valid values each part can take. `.values` means we're explicitly giving the values, and `.wild` means "use all possible values", and can be used on certain types with finite status like enums and bools.
+
+We define a simple mutable struct in order to use this technique.
+
+```swift
+    // mutable struct with a no-param init
+    struct RetryParam: WildcardPrototyping {
+        var retryEnabled = true
+        var retryCount = 0
+        var lastAttemptErrorCode = 0
+        var connectionStatus = ConnectionStatus.offline
+    }
+```
+
+This is a kind of prototype value. Any properties your `.variants` call doesn't specify get to keep their default value as defined in the prototype.
 
 ## Ideas
 
