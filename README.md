@@ -150,7 +150,9 @@ Although this experiment is made with Testing in mind, you can use it in any con
 
 ## Ideas
 
-We could have a `.wildSample` that would allow infinite type wildcarding by making you specify a random choice function on the type and how many samples to take. (In the interests of maintaining deterministic testing the random choice should be based on the same random seed and alg each time.)
+1. Could add a peer macro to make it nicer to call, e.g. `@TestWildcards`.
+
+2. We could have a `.wildSample` that would allow infinite type wildcarding by making you specify a random choice function on the type and how many samples to take. (In the interests of maintaining deterministic testing the random choice should be based on the same random seed and alg each time.)
 
 Such an idea could also be applied to iterators with potentially infinite values to provide; you just give a count for how many values to take.
 
