@@ -230,6 +230,18 @@ final class TestingWildcardsTests {
         #expect(example.name == "bob")
     }
 
+//    @Test(arguments:
+//        Example.variantsList(
+//            .wild(\.flag),
+//            .values(\.count, [0, 5, 10]),
+//        )
+//    )
+//    func truthTableGeneration(_ examples: [Example]) {
+//        // we can count the variants because we've passed them all in at once
+//        #expect(examples.count == 6)
+//    }
+
+
 // //    can't do closures easily due to hashable requirement.
 // //    could do e.g. NamedClosure hack (which takes an id string), but..
 //    @Test(arguments:

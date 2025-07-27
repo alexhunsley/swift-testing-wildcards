@@ -53,7 +53,7 @@ Suppose you've writing tests for an `HTTPRetrier` type. In Swift Testing you mig
 
 Ugh, that arguments list!
 
-So what's we're doing here is trying all variations of the parameters that don't matter -- we want to know that the only thing that affects the outcome is the value of `retryEnabled`, so we try all possible values of the other things too.
+So what we're doing here is trying all variations of the parameters that don't matter -- we want to know that the only thing that affects the outcome is the value of `retryEnabled`, so we try all possible values of the other things too.
 
 That arguments list is a pain though. Can you quickly see if there's a mistake? Can you quickly see the exact intent?
 
