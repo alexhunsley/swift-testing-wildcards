@@ -41,7 +41,7 @@ Suppose you've writing tests for an `HTTPRetrier` type. In Swift Testing you mig
     func ifRetryDisabledThenShouldRetryAlwaysReturnFalse(retryEnabled: Bool,
                                               retryCount: Int,
                                               lastAttemptErrorCode: Int,
-                                              connectionStatus: ConnectionStatus) async throws {
+                                              connectionStatus: ConnectionStatus) {
 
         bool shouldRetry = retryPolicy.shouldRetry(retryEnabled: retryEnabled,
                                                    retryCount: retryCount,
@@ -68,7 +68,7 @@ Now take a look at this alternative:
             .wild(\.connectionStatus)                    // an enum
         )
     ])
-    func ifRetryDisabledThenShouldRetryAlwaysReturnFalse(retryParam: RetryParam) async throws {
+    func ifRetryDisabledThenShouldRetryAlwaysReturnFalse(retryParam: RetryParam) {
 
         bool retry = retryPolicy.shouldRetry(retryEnabled: retryParam.retryEnabled,
                                              retryCount: retryParam.retryCount,
@@ -119,7 +119,7 @@ Yes, by using `.variantsList` instead of `.variants`, and receiving an array par
         )
     ])
     // NOTE we're taking in [RetryParams] below
-    func ifRetryDisabledThenShouldRetryAlwaysReturnFalse(retryParam: [RetryParam]) async throws {
+    func ifRetryDisabledThenShouldRetryAlwaysReturnFalse(retryParam: [RetryParam]) {
 ```
 
 
@@ -157,7 +157,7 @@ If you repeat one of the variant spec lines, for example:
     // ...
 ```
 
-then your generated variants will containg duplicates, which isn't ideal.
+then your generated variants will contain duplicates, which isn't ideal.
 
 <!-- * `OptionSet` -->
 
