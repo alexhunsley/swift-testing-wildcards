@@ -60,7 +60,7 @@ That arguments list is a pain though. Can you quickly see if there's a mistake? 
 Now take a look at this alternative:
 
 ```swift
-    @Test("if retry is disabled then should never retry", arguments: [
+    @Test("if retry is disabled then shouldRetry always returns false", arguments: [
         RetryParam.variants(
             .values(\.retryEnabled, false),              // a single value
             .values(\.retryCount, 0..2),                 // an int range
@@ -68,7 +68,7 @@ Now take a look at this alternative:
             .wild(\.connectionStatus)                    // an enum
         )
     ])
-    func ifRetryDisabledThenShouldNeverRetry(retryParam: RetryParam) async throws {
+    func ifRetryDisabledThenShouldRetryAlwaysReturnFalse(retryParam: RetryParam) async throws {
 
         bool retry = retryPolicy.shouldRetry(retryEnabled: retryParam.retryEnabled,
                                              retryCount: retryParam.retryCount,
@@ -78,9 +78,9 @@ Now take a look at this alternative:
     }
 ```
 
-The crucial part os the `RetryParam.variants` bit where we say what valid values each part can take. `.values` means we're explicitly giving the values, and `.wild` means "use all possible values", and can be used on certain types with finite status like enums and bools.
+The crucial part is the `RetryParam.variants` bit where we specify the values each property can take. The use of `.values` means we're explicitly giving all the possible values, and `.wild` means "use all possible values automatically"; it can only be used on certain types with finite states like enums and bools.
 
-We define a simple mutable struct in order to use this technique.
+In order to use this technique we must define a simple mutable struct like this:
 
 ```swift
     // mutable struct with a no-param init
