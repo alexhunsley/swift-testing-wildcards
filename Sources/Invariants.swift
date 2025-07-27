@@ -71,6 +71,7 @@ extension OptionSet where Self: InvariantValues, Self.RawValue: FixedWidthIntege
 
 public protocol WildcardPrototyping {
     static var prototype: Self { get }
+//    init()
 }
 
 // extension for conforming objects, so can call like:
