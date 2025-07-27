@@ -32,5 +32,16 @@ let project = Project(
             resources: [],
             dependencies: [.target(name: "TestingWildcards")]
         ),
+//        .target(
+//            name: "MacroTest",
+//            destinations: .iOS,
+//            product: .unitTests,
+//            bundleId: "dev.tuist.TestingWildcardsTests",
+//            dependencies: [
+//                "TestingWildcards",
+//                "TestingWildcardsTests",
+//                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax")
+//            ]
+//        )
     ]
 )

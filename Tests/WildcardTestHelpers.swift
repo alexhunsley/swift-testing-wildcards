@@ -14,20 +14,21 @@ public enum Mode: CaseIterable, InvariantValues, CustomStringConvertible {
 
 public struct Example: WildcardPrototyping, CustomStringConvertible {
     public static var wildcardPrototype: Self {
-        .init(name: "bob", flag: true, mode: .alpha, count: 0)
+        .init(name: "bob", flag: true, mode: .alpha, count: 0, error: nil)
     }
 
     public var name: String
     public var flag: Bool
     public var mode: Mode
     public var count: Int
+    public var error: SomeError?
 
     public var description: String {
-        "[Example name: \(name) flag: \(flag), mode: \(mode), count: \(count)])"
+        "[Example name: \(name) flag: \(flag), mode: \(mode), count: \(count), error: \(error)])"
     }
 }
 
-enum SomeError: Error, CaseIterable {
+public enum SomeError: Error, InvariantValues, CaseIterable {
     case catWokeUp
     case dogGotRainedOn
 }

@@ -78,6 +78,28 @@ final class TestingWildcardsTests {
         print(combinations)
     }
 
+    @Test
+    func wildcardsOfBothKindsWithAnOptional() {
+        // MARK: - Generate All Combinations
+        let base = Example(name: "bob", flag: false, mode: .alpha, count: 0)
+
+        let combinations = allInvariantCombinations(
+            base,
+            wildcardPaths: [
+                //                .simple(\.flag), // TODO if you pass same flag multiple times you get repeated combos!
+                .wild(\.error),
+                .wild(\.mode),
+                .values(\.count, [0, 5])
+            ]
+        )
+
+        #expect(combinations.count == 18)
+        #expect(combinations.contains(where: {
+            $0.flag == false && $0.mode == .alpha
+        }))
+        print(combinations)
+    }
+
     /// duplication of repeated wildcards is not desirable behaivour,
     /// but I'm tracking it here as *known* behaviour
     @Test
@@ -118,7 +140,28 @@ final class TestingWildcardsTests {
         #expect(combinations.count == 18)
     }
 
+    ///
     // use the combos gen in actually Test arguments
+
+    // Is there a helper could make to get the actual list of invariants in the test
+    // as well as each one passed the usual way?
+    // hmm doesn't really make sense. Could just pass in the invariants
+    // and manually loop over them, but then we lose the power of the results
+    // listing each combo.
+
+    @Test(arguments:
+            allInvariantCombinations(
+                Example(name: "bob", flag: false, mode: .alpha, count: 0),
+                wildcardPaths: [
+                    .wild(\.error),
+                    .wild(\.mode)
+                ])
+    )
+    func usingAnOptionalError(_ example: Example) {
+        // test something always true while invariants changing
+        #expect(example.name == "bob")
+    }
+
     @Test(arguments:
             allInvariantCombinations(
                 Example(name: "bob", flag: false, mode: .alpha, count: 0),
