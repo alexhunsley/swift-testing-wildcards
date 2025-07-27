@@ -13,41 +13,28 @@ Suppose you've writing tests for a `RetryPolicy` type. In Swift Testing you migh
 
 ```swift
     @Test("if retry is disabled then shouldRetry always returns false", arguments: [
-        (false, 0, 401, .offline),
-        (false, 1, 401, .offline),
-        (false, 2, 401, .offline),
-        (true, 0, 401, .offline),
-        (true, 1, 401, .offline),
-        (true, 2, 401, .offline),
-        (false, 0, 403, .offline),
-        (false, 1, 403, .offline),
-        (false, 2, 403, .offline),
-        (true, 0, 403, .offline),
-        (true, 1, 403, .offline),
-        (true, 2, 403, .offline),
-        (false, 0, 401, .online),
-        (false, 1, 401, .online),
-        (false, 2, 401, .online),
-        (true, 0, 401, .online),
-        (true, 1, 401, .online),
-        (true, 2, 401, .online),
-        (false, 0, 403, .online),
-        (false, 1, 403, .online),
-        (false, 2, 403, .online),
-        (true, 0, 403, .online),
-        (true, 1, 403, .online),
-        (true, 2, 403, .online),
+        (0, 401, .offline),
+        (1, 401, .offline),
+        (2, 401, .offline),
+        (0, 403, .offline),
+        (1, 403, .offline),
+        (2, 403, .offline),
+        (0, 401, .online),
+        (1, 401, .online),
+        (2, 401, .online),
+        (0, 403, .online),
+        (1, 403, .online),
+        (2, 403, .online),
     ])
-    func ifRetryDisabledThenShouldRetryAlwaysReturnFalse(retryEnabled: Bool,
-                                              retryCount: Int,
-                                              lastAttemptErrorCode: Int,
-                                              connectionStatus: ConnectionStatus) {
+    func ifRetryDisabledThenShouldRetryAlwaysReturnFalse(retryCount: Int,
+                                                         lastAttemptErrorCode: Int,
+                                                         connectionStatus: ConnectionStatus) {
 
-        bool shouldRetry = RetryPolicy.shouldRetry(retryEnabled: retryEnabled,
+        bool shouldRetry = RetryPolicy.shouldRetry(retryEnabled: false,
                                                    retryCount: retryCount,
                                                    lastAttemptErrorCode: lastAttemptErrorCode,
                                                    connectionStatus: connectionStatus)
-        #expect(shouldRetry == retryEnabled)
+        #expect(shouldRetry == false)
     }
 ```
 
@@ -62,7 +49,6 @@ Now take a look at this alternative:
 ```swift
     @Test("if retry is disabled then shouldRetry always returns false", arguments:
         RetryParam.variants(
-            .values(\.retryEnabled, false),              // a single value
             .values(\.retryCount, 0..2),                 // an int range
             .values(\.lastAttemptErrorCode, [401, 403]), // specific int values 
             .wild(\.connectionStatus)                    // an enum
@@ -70,11 +56,11 @@ Now take a look at this alternative:
     )
     func ifRetryDisabledThenShouldRetryAlwaysReturnFalse(retryParam: RetryParam) {
 
-        bool retry = RetryPolicy.shouldRetry(retryEnabled: retryParam.retryEnabled,
-                                             retryCount: retryParam.retryCount,
-                                             connectionStatus: retryParam.retryCount,
-                                             lastAttemptErrorCode: retryParam.lastAttemptErrorCode)
-        #expect(retry == retryEnabled)
+        bool shouldRetry = RetryPolicy.shouldRetry(retryEnabled: false,
+                                                   retryCount: retryParam.retryCount,
+                                                   connectionStatus: retryParam.retryCount,
+                                                   lastAttemptErrorCode: retryParam.lastAttemptErrorCode)
+        #expect(shouldRetry == false)
     }
 ```
 
