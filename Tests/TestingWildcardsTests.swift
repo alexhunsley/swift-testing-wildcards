@@ -26,8 +26,6 @@ final class TestingWildcardsTests {
         #expect(combinations.contains(where: {
             $0.flag == false && $0.mode == .alpha //&& $0.name == "bob"
         }))
-
-        print(combinations)
     }
 
     @Test
@@ -46,7 +44,6 @@ final class TestingWildcardsTests {
         #expect(combinations.contains(where: {
             $0.flag == false && $0.mode == .alpha
         }))
-        print(combinations)
     }
 
     @Test
@@ -68,7 +65,6 @@ final class TestingWildcardsTests {
         #expect(combinations.contains(where: {
             $0.flag == false && $0.mode == .alpha
         }))
-        print(combinations)
     }
 
     @Test
@@ -90,7 +86,6 @@ final class TestingWildcardsTests {
         #expect(combinations.contains(where: {
             $0.flag == false && $0.mode == .alpha
         }))
-        print(combinations)
     }
 
     /// duplication of repeated wildcards is not desirable behaivour,
@@ -255,13 +250,11 @@ final class TestingWildcardsTests {
             Example.variantsList(
                 .wild(\.flag),
                 .values(\.count, [0, 5, 10]),
-                .values(\.count, [0, 5, 10])
             )
     )
-    func repeatedManualWildcardsAreDuplicated_callStyle2c(_ examples: [Example]) {
-        // test something always true while invariants changing
-        //        #expect(example.name == "bob")
-        #expect(examples.count == 18)
+    func variantsListPassesInAllVariantsAsOneList(_ examples: [Example]) {
+        // we can count the variants because we've passed them all in at once
+        #expect(examples.count == 6)
     }
     @Test(arguments:
             Example.variants(
@@ -275,7 +268,6 @@ final class TestingWildcardsTests {
     )
     func valuesAsRange(_ example: Example) {
         // test something always true while invariants changing
-        print("GOT: \(example)")
         #expect(example.name == "bob")
         #expect(10...12 ~= example.count)
     }
@@ -301,6 +293,5 @@ final class TestingWildcardsTests {
     func mutableResultValues(_ example: Example) {
         // test something always true while invariants changing
         #expect(example.name == "bob")
-        print("Examploid for result: \(String(describing: example.mutableResult.result))")
     }
 }
