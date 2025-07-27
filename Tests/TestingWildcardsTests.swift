@@ -301,6 +301,6 @@ final class TestingWildcardsTests {
     func mutableResultValues(_ example: Example) {
         // test something always true while invariants changing
         #expect(example.name == "bob")
-        print("Examploid for result: \(example.mutableResult.result)")
+        print("Examploid for result: \(String(describing: example.mutableResult.result))")
     }
 }
