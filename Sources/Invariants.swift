@@ -7,20 +7,27 @@
 //   probably construct the real type from it; so I think this mutable aspect is ok.
 
 public protocol InvariantValues {
-    static var allValues: [Self] { get }
-}
+//    associatedtype AllValues: Sequence where AllValues.Element == Self
+//    static var allValues: AllValues { get }
+
+    static var allValues: AnySequence<Self> { get }}
 
 extension Bool: InvariantValues {
-    public static let allValues = [true, false]
+    public static var allValues: AnySequence<Self> {
+        AnySequence([true, false])
+    }
+//    public static let allValues = AnySequence([Bool.yes, Bool.no])
 }
 
 extension InvariantValues where Self: CaseIterable {
-    public static var allValues: [Self] { Array(Self.allCases) }
+    public static var allValues: AnySequence<Self> {
+        AnySequence(Self.allCases)
+    }
 }
 
 extension Optional: InvariantValues where Wrapped: InvariantValues {
-    public static var allValues: [Optional<Wrapped>] {
-        [nil] + Wrapped.allValues.map(Optional.some)
+    public static var allValues: AnySequence<Optional<Wrapped>> {
+        AnySequence([nil] + Wrapped.allValues.map(Optional.some))
     }
 }
 

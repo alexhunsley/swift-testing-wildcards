@@ -27,7 +27,7 @@ public struct Example: WildcardPrototyping, CustomStringConvertible {
     public var error: SomeError?
 
     public var description: String {
-        "[Example name: \(name) flag: \(flag), mode: \(mode), count: \(count), error: \(error)])"
+        "[Example name: \(name) flag: \(flag), mode: \(mode), count: \(count), error: \(String(describing: error))])"
     }
 
 //    public static func callAsFunction(_ wildcardPaths: [WildcardPath<Self>]) -> [Self] {

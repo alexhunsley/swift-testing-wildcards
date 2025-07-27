@@ -13,7 +13,7 @@ public enum WildcardPath<Root> {
     }
 }
 
-// rename? AutoKeyPath?
+// could these two be merged?
 public struct AnyWritableKeyPath<Root> {
     public let keyPath: PartialKeyPath<Root>
     public let set: (inout Root, Any) -> Void
@@ -24,7 +24,9 @@ public struct AnyWritableKeyPath<Root> {
         self.set = { root, value in
             root[keyPath: keyPath] = value as! Value
         }
-        self.getAllValues = { Value.allValues }
+        self.getAllValues = {
+            Array(Value.allValues).map { $0 as Any }
+        }
     }
 }
 
