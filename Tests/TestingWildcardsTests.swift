@@ -141,20 +141,6 @@ final class TestingWildcardsTests {
     }
 
     ///
-    // trying more ergonomic format using the prototype
-
-    @Test(arguments:
-            Example.variants([
-                    .wild(\.error),
-                    .wild(\.mode)
-                ])
-    )
-    func usingThePrototype_forErgonomics(_ example: Example) {
-        // test something always true while invariants changing
-        #expect(example.name == "bob")
-    }
-
-    ///
     // use the combos gen in actually Test arguments
 
     // Is there a helper could make to get the actual list of invariants in the test
@@ -213,6 +199,20 @@ final class TestingWildcardsTests {
             ])
     )
     func repeatedManualWildcardsAreDuplicated_callStyle2(_ example: Example) {
+        // test something always true while invariants changing
+        #expect(example.name == "bob")
+    }
+
+    ///
+    // trying more ergonomic format using the prototype
+
+    @Test(arguments:
+            Example.variants([
+                    .wild(\.error),
+                    .wild(\.mode)
+                ])
+    )
+    func usingThePrototype_forErgonomics(_ example: Example) {
         // test something always true while invariants changing
         #expect(example.name == "bob")
     }
