@@ -4,7 +4,7 @@ import SwiftUI
 struct TestingWildcardsApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            Text("main")
         }
     }
 }
