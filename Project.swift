@@ -43,5 +43,8 @@ let project = Project(
 //                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax")
 //            ]
 //        )
+    ],
+    additionalFiles: [
+        "README.md"
     ]
 )

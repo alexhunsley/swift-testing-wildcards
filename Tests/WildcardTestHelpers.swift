@@ -46,10 +46,10 @@ struct Example: WildcardPrototyping, CustomStringConvertible {
     var c: Int = 0
     var filePermission: FilePermission = .all
     var error: SomeError? = nil
-
+    var mutableResult: MutableResult<Bool, SomeError> = .init()
 
     var description: String {
-        "[Example name: \(name) flag: \(flag), mode: \(mode), count: \(count), abc: \(a) \(b) \(c) perm: \(filePermission) error: \(String(describing: error))])"
+        "[Example name: \(name) flag: \(flag), mode: \(mode), count: \(count), abc: \(a) \(b) \(c) perm: \(filePermission) result: \(mutableResult) error: \(String(describing: error))])"
     }
 
 //    public static func callAsFunction(_ wildcardPaths: [WildcardPath<Self>]) -> [Self] {
