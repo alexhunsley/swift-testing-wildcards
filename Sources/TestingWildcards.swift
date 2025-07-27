@@ -83,14 +83,15 @@ func allInvariantCombinations<T>(
     }
 }
 
-public enum InvariantCombinator {
-    public static func testCases<T>(
-        from prototype: @autoclosure () -> T,
-        wildcardPaths: [WildcardPath<T>] = []
-    ) -> [T] {
-        allInvariantCombinations(prototype(), wildcardPaths: wildcardPaths)
-    }
-}
+// not used currently
+//public enum InvariantCombinator {
+//    public static func testCases<T>(
+//        from prototype: @autoclosure () -> T,
+//        wildcardPaths: [WildcardPath<T>] = []
+//    ) -> [T] {
+//        allInvariantCombinations(prototype(), wildcardPaths: wildcardPaths)
+//    }
+//}
 
 // syntactic sugar
 

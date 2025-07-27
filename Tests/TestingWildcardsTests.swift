@@ -141,6 +141,20 @@ final class TestingWildcardsTests {
     }
 
     ///
+    // trying more ergonomic format using the prototype
+
+    @Test(arguments:
+            Example.variants([
+                    .wild(\.error),
+                    .wild(\.mode)
+                ])
+    )
+    func usingThePrototype_forErgonomics(_ example: Example) {
+        // test something always true while invariants changing
+        #expect(example.name == "bob")
+    }
+
+    ///
     // use the combos gen in actually Test arguments
 
     // Is there a helper could make to get the actual list of invariants in the test
@@ -162,6 +176,20 @@ final class TestingWildcardsTests {
         #expect(example.name == "bob")
     }
 
+    // use the callAsFunction version (ergonomic).
+    //   -- doesn't want to work?!
+    @Test(arguments:
+            Example.variants([
+                .wild(\.error),
+                .wild(\.mode)
+            ])
+    )
+    func usingAnOptionalError2(_ example: Example) {
+        // test something always true while invariants changing
+        #expect(example.name == "bob")
+    }
+
+
     @Test(arguments:
             allInvariantCombinations(
                 Example(name: "bob", flag: false, mode: .alpha, count: 0),
@@ -178,8 +206,7 @@ final class TestingWildcardsTests {
 
     // use the combos gen in actually Test arguments, in base.call style
     @Test(arguments:
-        Example.allInvariantCombinations(
-            wildcardPaths: [
+        Example.variants([
                 .wild(\.flag),
                 .values(\.count, [0, 5, 10]),
                 .values(\.count, [0, 5, 10])

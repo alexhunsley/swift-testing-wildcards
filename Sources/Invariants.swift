@@ -63,7 +63,7 @@ extension OptionSet where Self: InvariantValues, Self.RawValue: FixedWidthIntege
 ///
 
 public protocol WildcardPrototyping {
-    static var wildcardPrototype: Self { get }
+    static var prototype: Self { get }
 }
 
 // extension for conforming objects, so can call like:
@@ -73,9 +73,17 @@ public protocol WildcardPrototyping {
 // (we don't add this to InvariantValues proto because then the
 // proto type would have to provide allValues, which doesn't always make sense)
 extension WildcardPrototyping {
-    public static func allInvariantCombinations(
-        wildcardPaths: [WildcardPath<Self>] = []
+    public static func variants(
+        _ wildcardPaths: [WildcardPath<Self>] = []
     ) -> [Self] {
-        TestingWildcards.allInvariantCombinations(Self.wildcardPrototype, wildcardPaths: wildcardPaths)
+        TestingWildcards.allInvariantCombinations(Self.prototype, wildcardPaths: wildcardPaths)
     }
+
+    // doesn't work! Compiler can't handle the Example( ... wilds) form at call site. It's
+    // not the clearest, to be fair.
+//    public static func callAsFunction(_ wildcardPaths: [WildcardPath<Self>]) -> [Self] {
+//        TestingWildcards.allInvariantCombinations(Self.prototype, wildcardPaths: wildcardPaths)
+//    }    
+    // want way to say simply `Example(.wild, etc...)`
+//    public var
 }

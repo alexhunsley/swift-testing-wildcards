@@ -13,7 +13,7 @@ public enum Mode: CaseIterable, InvariantValues, CustomStringConvertible {
 }
 
 public struct Example: WildcardPrototyping, CustomStringConvertible {
-    public static var wildcardPrototype: Self {
+    public static var prototype: Self {
         .init(name: "bob", flag: true, mode: .alpha, count: 0, error: nil)
     }
 
@@ -26,6 +26,11 @@ public struct Example: WildcardPrototyping, CustomStringConvertible {
     public var description: String {
         "[Example name: \(name) flag: \(flag), mode: \(mode), count: \(count), error: \(error)])"
     }
+
+//    public static func callAsFunction(_ wildcardPaths: [WildcardPath<Self>]) -> [Self] {
+//        TestingWildcards.allInvariantCombinations(Self.prototype, wildcardPaths: wildcardPaths)
+//    }
+
 }
 
 public enum SomeError: Error, InvariantValues, CaseIterable {
