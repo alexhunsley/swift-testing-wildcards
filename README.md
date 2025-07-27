@@ -9,7 +9,7 @@ If the word 'invariants' doesn't mean much to you, just think of wildcards and s
 
 ## Example
 
-Suppose you've writing tests for an `HTTPRetrier` type. In Swift Testing you might write the following:
+Suppose you've writing tests for a `RetryPolicy` type. In Swift Testing you might write the following:
 
 ```swift
     @Test("if retry is disabled then shouldRetry always returns false", arguments: [
@@ -43,11 +43,11 @@ Suppose you've writing tests for an `HTTPRetrier` type. In Swift Testing you mig
                                               lastAttemptErrorCode: Int,
                                               connectionStatus: ConnectionStatus) {
 
-        bool shouldRetry = retryPolicy.shouldRetry(retryEnabled: retryEnabled,
+        bool shouldRetry = RetryPolicy.shouldRetry(retryEnabled: retryEnabled,
                                                    retryCount: retryCount,
                                                    lastAttemptErrorCode: lastAttemptErrorCode,
                                                    connectionStatus: connectionStatus)
-        #expect(shouldRetry == false)
+        #expect(shouldRetry == retryEnabled)
     }
 ```
 
@@ -70,11 +70,11 @@ Now take a look at this alternative:
     )
     func ifRetryDisabledThenShouldRetryAlwaysReturnFalse(retryParam: RetryParam) {
 
-        bool retry = retryPolicy.shouldRetry(retryEnabled: retryParam.retryEnabled,
+        bool retry = RetryPolicy.shouldRetry(retryEnabled: retryParam.retryEnabled,
                                              retryCount: retryParam.retryCount,
                                              connectionStatus: retryParam.retryCount,
                                              lastAttemptErrorCode: retryParam.lastAttemptErrorCode)
-        #expect(retry == false)
+        #expect(retry == retryEnabled)
     }
 ```
 
