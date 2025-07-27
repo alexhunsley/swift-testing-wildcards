@@ -12,6 +12,15 @@ public enum WildcardPath<Root> {
         let sequence = AnySequence(values)
         return .values(OverriddenKeyPath(keyPath, values: sequence))
     }
+
+    // a single value
+    public static func values<V: Hashable>(
+        _ keyPath: WritableKeyPath<Root, V>,
+        _ value: V
+    ) -> Self {
+        let sequence = AnySequence([value])
+        return .values(OverriddenKeyPath(keyPath, values: sequence))
+    }
 }
 
 // could these two be merged?
@@ -89,29 +98,3 @@ func allInvariantCombinations<T>(
         return copy
     }
 }
-
-// not used currently
-//public enum InvariantCombinator {
-//    public static func testCases<T>(
-//        from prototype: @autoclosure () -> T,
-//        wildcardPaths: [WildcardPath<T>] = []
-//    ) -> [T] {
-//        allInvariantCombinations(prototype(), wildcardPaths: wildcardPaths)
-//    }
-//}
-
-// syntactic sugar
-
-//public func anyWritable<Root, Value: InvariantValues>(
-//    _ keyPath: WritableKeyPath<Root, Value>
-//) -> AnyWritableKeyPath<Root> {
-//    AnyWritableKeyPath(keyPath)
-//}
-
-// nicer version, but not needed now:
-//extension WritableKeyPath<Root, Value> where Value: InvariantValues {
-//extension WritableKeyPath where Value: InvariantValues {
-//    public var anyWritable: AnyWritableKeyPath<Root> {
-//        AnyWritableKeyPath(self)
-//    }
-//}

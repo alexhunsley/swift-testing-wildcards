@@ -238,16 +238,19 @@ final class TestingWildcardsTests {
     }
 
     @Test(arguments:
-            allInvariantCombinations(
-                Example(name: "bob", flag: false, mode: .alpha, count: 0),
-                wildcardPaths: [
+            Example.variants(
                     .wild(\.flag),
-                    .values(\.count, 0...2),
-                ])
+                    .values(\.count, 10...12),
+                    .values(\.mode, [.beta, .gamma]),
+                    .values(\.a, stride(from: 2, to: 4, by: 2)),
+                    .values(\.b, stride(from: 0, through: 5, by: 3)),
+                    .values(\.c, [20, 31, 56]),
+            )
     )
     func valuesAsRange(_ example: Example) {
         // test something always true while invariants changing
+        print("GOT: \(example)")
         #expect(example.name == "bob")
-        #expect(0...2 ~= example.count)
+        #expect(10...12 ~= example.count)
     }
 }
