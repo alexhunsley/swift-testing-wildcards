@@ -40,7 +40,7 @@ Suppose you've writing tests for a `RetryPolicy` type. In Swift Testing you migh
 
 Ugh, that arguments list!
 
-So what we're doing here is trying all variations of the parameters that don't matter -- we want to know that the only thing that affects the outcome is the value of `retryEnabled`, so we try all possible values of the other things too.
+So what we're doing here is verifying that when `retryEnabled == false` we get false for `shouldRetry` no matter what the other parameters are.
 
 That arguments list is a pain though. Can you quickly see if there's a mistake? Can you quickly see the exact intent?
 
@@ -64,7 +64,7 @@ Now take a look at this alternative:
     }
 ```
 
-The crucial part is the `RetryParam.variants` bit where we specify the values each property can take. The use of `.values` means we're explicitly giving all the possible values (by giving some `Sequence`), and `.wild` means "use all possible values automatically"; it can only be used on types with a finite number of states like `enum` and `Bool`.
+The crucial part is the `RetryParam.variants` bit where we specify the values each property can take. The use of `.values` means we're explicitly giving all the possible values (by giving some `Sequence`), and `.wild` means "work out all possible values automatically"; it can only be used on types with a finite number of states like simpler enums and bools.
 
 In order to use this technique we must define a simple mutable struct:
 
@@ -80,7 +80,7 @@ In order to use this technique we must define a simple mutable struct:
 
 To conform to `WildcardPrototyping` you must have a no-param init, and if you initialise all your properties as you declare them you get that for free.
 
-This struct is a kind of prototype value. Any properties your `.variants` invocation doesn't override get to keep their default value as defined in the prototype.
+This struct is a kind of prototype value. Any properties your `.variants` invocation doesn't override have the default value defined in the prototype.
 
 If you're sure you will never mutate some prototype property you can declare it `let` to enforce that.
 
