@@ -78,7 +78,7 @@ Now take a look at this alternative:
     }
 ```
 
-The crucial part is the `RetryParam.variants` bit where we specify the values each property can take. The use of `.values` means we're explicitly giving all the possible values (with anything that conforms to Sequence), and `.wild` means "use all possible values automatically"; it can only be used on types with a finite number of states like `enum` and `Bool`.
+The crucial part is the `RetryParam.variants` bit where we specify the values each property can take. The use of `.values` means we're explicitly giving all the possible values (by giving some `Sequence`), and `.wild` means "use all possible values automatically"; it can only be used on types with a finite number of states like `enum` and `Bool`.
 
 In order to use this technique we must define a simple mutable struct like this:
 
@@ -96,7 +96,7 @@ This is a kind of prototype value. Any properties your `.variants` call doesn't 
 
 If you're sure you will never want to change some prototype property you can declare it `let` to enforce that.
 
-## What can I use .wild on?
+## What can I use `.wild` on?
 
 Currently `.wild` work with these types:
 
@@ -105,7 +105,7 @@ Currently `.wild` work with these types:
 * `Result` (only if its success and failure types are both `.wild` compatible). You must use the provided `MutableResult` in your prototype struct and  then access the real `Result` via its `.result` property
 * `Optional` (only if its wrapped type is `.wild` compatible; its variants consist of the nil value plus all possible values of the wrapped type)
 
-## Can I get all the variants passed into my test method at the same time?
+## Can I get all the variants passed into my test method as a list?
 
 Yes, by using `.variantsList` instead of `.variants`, and receiving an array parameter to your func, like so:
 
@@ -120,6 +120,8 @@ Yes, by using `.variantsList` instead of `.variants`, and receiving an array par
     )
     // NOTE we're taking in [RetryParams] below
     func ifRetryDisabledThenShouldRetryAlwaysReturnFalse(retryParam: [RetryParam]) {
+        // this func will only be called once with all the variants in a list
+    }
 ```
 
 
@@ -155,7 +157,7 @@ Such an idea could also be applied to iterators with potentially infinite values
 ## Known issues
 
 If you repeat one of the variant spec lines, for example:
-s
+
 ```swift
     let variants = RetryParam.variants(
         .values(\.retryEnabled, false),
