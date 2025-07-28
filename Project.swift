@@ -21,6 +21,11 @@ let project = Project(
 //            resources: ["Resources/**"],
             dependencies: [],
             settings: .settings(base: [
+                "SWIFT_VERSION": "6.0",
+                "OTHER_SWIFT_FLAGS": [
+                    "-enable-actor-data-race-checks",
+                    "-strict-concurrency=complete"
+                ]
             ])
         ),
         .target(
