@@ -89,9 +89,9 @@ If you're sure you will never mutate some prototype property you can declare it 
 Currently `.wild` work with these types:
 
 * `Bool`
-* `enum` (simpler ones that are `CaseIterable`, i.e. no associated values)
-* `Result` (only if its success and failure types are both `.wild` compatible). You must use the provided `MutableResult` in your prototype struct and  then access the real `Result` via its `.result` property
-* `Optional` (only if its wrapped type is `.wild` compatible; its variants consist of the nil value plus all possible values of the wrapped type)
+* `enum`: must be CaseIterable compatible and must conform to `WildcardEnum`
+* `Optional`: its wrapped type must be `.wild` compatible; its variants consist of the nil value plus all possible values of the wrapped type
+* `MutableResult`: a provided helper similar to `Result`. Your success and failure types must be `.wild` compatible. You must use the provided `MutableResult` in your prototype struct and then in your test func you access the real `Result` via its `.result` property
 
 ## Can I get all the variants passed into my test method as a list?
 
@@ -111,7 +111,6 @@ Yes, by using `.variantsList` instead of `.variants`, and receiving an array par
         // this func will only be called once with all the variants in a list
     }
 ```
-
 
 
 ## Use outside of Testing

@@ -46,7 +46,7 @@ struct Example: WildcardPrototyping, CustomStringConvertible, Equatable {
     }
 }
 
-enum SomeError: Error, Equatable, InvariantValues, CaseIterable {
+enum SomeError: Error, Equatable, WildcardEnum {
     case catWokeUp
     case dogGotRainedOn
 }

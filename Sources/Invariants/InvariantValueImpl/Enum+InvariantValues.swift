@@ -4,3 +4,5 @@ extension InvariantValues where Self: CaseIterable {
     }
 }
 
+// syntactic sugar: can conform to this one protocol instead of two
+public protocol WildcardEnum: CaseIterable, InvariantValues {}
