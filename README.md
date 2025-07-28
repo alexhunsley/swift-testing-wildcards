@@ -1,101 +1,118 @@
 
-# Swift Testing: a wildcard helper for testing invariants
+# Wildcard helper for Swift Testing
 
-This is an experimental tool for writing exhaustive tests in the Testing framework.
+This is an experimental tool for reducing boilerplate and tedium when tests.
 
-The idea is to make tests easier to write, and easier to read, by making the intentions around invariant testing easy to state and quite explicit.
-
-If the word 'invariants' doesn't mean much to you, just think of wildcards and see the example below.
+The idea is to make tests easier to write, and easier to read, by having a way to explicitly define combinations that signals intent.
 
 ## Example
 
-Suppose you've writing tests for a `RetryPolicy` type. In Swift Testing you might write the following:
+Suppose you've writing tests for a some feature flags. In bog standard Swift `Testing` you might write the following:
 
 ```swift
-    @Test("if retry is disabled then shouldRetry always returns false", arguments: [
-        (0, 401, .offline),
-        (1, 401, .offline),
-        (2, 401, .offline),
-        (0, 403, .offline),
-        (1, 403, .offline),
-        (2, 403, .offline),
-        (0, 401, .online),
-        (1, 401, .online),
-        (2, 401, .online),
-        (0, 403, .online),
-        (1, 403, .online),
-        (2, 403, .online),
-    ])
-    func ifRetryDisabledThenShouldRetryAlwaysReturnFalse(retryCount: Int,
-                                                         lastAttemptErrorCode: Int,
-                                                         connectionStatus: ConnectionStatus) {
+    @Test("feature flag combinations", arguments: [
+        (false, false, 0),
+        (true, false, 0),
+        (false, true, 0),
+        (true, true, 0),
+        (false, false, 1),
+        (true, false, 1),
+        (true, true, 1),
+        (false, false, 2),
+        (true, false, 2),
+        (false, true, 2),
+        (true, true, 2),
 
-        bool shouldRetry = RetryPolicy.shouldRetry(retryEnabled: false,
-                                                   retryCount: retryCount,
-                                                   lastAttemptErrorCode: lastAttemptErrorCode,
-                                                   connectionStatus: connectionStatus)
-        #expect(shouldRetry == false)
+    ])
+    func featureFlags(flagNewUI: Int,
+                      flagOfflineAllowed: Int,
+                      numItemsInBasket: Int) {
+        #expect( // some test on the three parameters )
     }
 ```
 
-Ugh, that arguments list!
+Ugh, that arguments list! Can you quickly see if there's a mistake been made? Actually, one combo *is* missed out. Which one? Was that deliberate?
 
-So what we're doing here is verifying that when `retryEnabled == false` we get false for `shouldRetry` no matter what the other parameters are.
+Could we use some nested for loops in our test to generate the combos? We could, but I think it's annoying, and worse still we lose the lovely feature of `Testing` where we get the test result for every argument individually.
 
-That arguments list is a pain though. Can you quickly see if there's a mistake? Can you quickly see the exact intent?
-
-Now take a look at this alternative:
+Hence the creation of this wildcard test helper. Here's how we'd express the test setup:
 
 ```swift
-    @Test("if retry is disabled then shouldRetry always returns false", arguments:
-        RetryParam.variants(
-            .values(\.retryCount, 0..2),                 // an int range
-            .values(\.lastAttemptErrorCode, [401, 403]), // specific int values 
-            .wild(\.connectionStatus)                    // an enum
+    @Test("feature flag combinations", arguments:
+        FeatureFlagParams.variants(
+            .wild(\.newUI),
+            .wild(\.offlineAllowed), 
+            .values(\.numItemsInBasket, 0...2)
         )
     )
-    func ifRetryDisabledThenShouldRetryAlwaysReturnFalse(retryParam: RetryParam) {
-
-        bool shouldRetry = RetryPolicy.shouldRetry(retryEnabled: false,
-                                                   retryCount: retryParam.retryCount,
-                                                   connectionStatus: retryParam.retryCount,
-                                                   lastAttemptErrorCode: retryParam.lastAttemptErrorCode)
-        #expect(shouldRetry == false)
+    func featureFlags(ffParams: FeatureFlagParams) {
+        #expect( // some test based on ffParams )
     }
 ```
 
-The crucial part is the `RetryParam.variants` bit where we specify the values each property can take. The use of `.values` means we're explicitly giving all the possible values (by giving some `Sequence`), and `.wild` means "work out all possible values automatically"; it can only be used on types with a finite number of states like simpler enums and bools.
+We've replaced the tedious arguments list with a call to `FeatureFlagParams.variants`. We say how to generate a list of `FeatureFlagParam` using keypaths with either `.wild` or `.values`.
 
-In order to use this technique we must define a simple mutable struct:
+`.wild` means use all possible variants of a value -- it can only be used for some simpler types like `bool`.
+
+`.values` means use the explicitly given values for that keypath. In this example we use `0...2`, but that expression can be any `Sequence`.
+
+In order to use this technique we must define a simple mutable helper struct:
 
 ```swift
     // mutable struct with a no-param init
-    struct RetryParam: WildcardPrototyping {
-        var retryEnabled = true
-        var retryCount = 0
-        var lastAttemptErrorCode = 0
-        var connectionStatus = ConnectionStatus.offline
+    struct FeatureFlagParams: WildcardPrototyping {
+        var retryEnabled = false
+        var retryCount = false
+        var numItemsInBasket = 0
     }
 ```
 
-To conform to `WildcardPrototyping` you must have a no-param init, and if you initialise all your properties as you declare them you get that for free.
+To conform to `WildcardPrototyping` you must have a no-param init; you get that for free if you initialise all your properties as you declare them.
 
-This struct is a kind of prototype value. Any properties your `.variants` invocation doesn't override have the default value defined in the prototype.
+This struct specifies a prototype value for your test. Any properties your `.variants` invocation doesn't override have the default value defined in the prototype.
 
-If you're sure you will never mutate some prototype property you can declare it `let` to enforce that.
+## The flexibility of `Sequence`
+
+`.values` takes a Sequence which is great for expressiveness. Examples:
+
+```
+    // this bool will only be false
+    .values(\.newUI, false)
+
+    // explicit int values
+    .values(\.numItemsInBasket, [0, 3, 15])
+ 
+     // a stride over ints
+    .values(\.numItemsInBasket, stride(from: 2, to: 20, by: 2))
+    
+    // first 5 vals of some infinite sequence
+    .values(\.numItemsInBasket, someInfiniteSequence.prefix(5))
+```
 
 ## What can I use `.wild` on?
 
-Currently `.wild` work with these types:
-
 * `Bool`
-* `enum`: must be CaseIterable compatible and must conform to `WildcardEnum`
-* `Optional`: its wrapped type must be `.wild` compatible; its variants consist of the nil value plus all possible values of the wrapped type
+* `enum`: must be `CaseIterable` compatible; add the `WildcardEnum` marker protocol
+* `Optional`: its wrapped type must be `.wild` compatible; its generated values for the test are the `nil` value plus all possible values of the wrapped type
 * `MutableResult`: a provided helper similar to `Result`. Your success and failure types must be `.wild` compatible. You must use the provided `MutableResult` in your prototype struct and then in your test func you access the real `Result` via its `.result` property
+
+## Can I omit specific combinations?
+
+You can use a `.filter` to remove any specific combos you don't want. Example:
+
+```swift
+        FeatureFlagParams.variants(
+            .wild(\.newUI),
+            .wild(\.offlineAllowed), 
+            .values(\.numItemsInBasket, 0...2)
+        )
+        // remove combo where neither feature flag is set
+        .filter { $0.newUI || $0.offlineAllowed }
+```
 
 ## Can I get all the variants passed into my test method as a list?
 
-Yes, by using `.variantsList` instead of `.variants`, and receiving an array parameter to your func, like so:
+Yes, by calling `.variantsList` instead of `.variants`, and receiving an array to your func. Exmaple:
 
 ```swift
     @Test("if retry is disabled then shouldRetry always returns false", arguments:
@@ -112,10 +129,9 @@ Yes, by using `.variantsList` instead of `.variants`, and receiving an array par
     }
 ```
 
+## Use outside of `Testing`
 
-## Use outside of Testing
-
-Although this experiment is made with Testing in mind, you can use it in any context, for example:
+Although this experiment is made with `Testing` in mind, you can use it in any context, for example:
 
 ```swift
     struct RetryParam: WildcardPrototyping {
@@ -141,6 +157,10 @@ Although this experiment is made with Testing in mind, you can use it in any con
 
 2. We could have a `.wildSample` that would allow infinite type wildcarding by making you specify a random choice function on the type and how many samples to take. (In the interests of maintaining deterministic testing the random choice should be based on the same random seed and alg each time.) Such an idea could also be applied to iterators with potentially infinite values to provide; you just give a count for how many values to take.
 
+## Design choices
+
+This helper uses mutability of a prototype to configure your test parameter. If instead it constructed the test parameter with the correct values from the get-go that might be nicer; for example we might not need the `MutableResult` helper.
+
 ## Known issues
 
 If you repeat one of the variant spec lines, for example:
@@ -152,10 +172,9 @@ If you repeat one of the variant spec lines, for example:
     // ...
 ```
 
-then your generated variants will contain duplicates, which isn't ideal. If I add `Hashable` conformance to a few places this can be fixed.
+then your generated variants will contain duplicates or can crash the tests, which isn't ideal.
 
 <!-- * `OptionSet` -->
-
 
 <!--
 
