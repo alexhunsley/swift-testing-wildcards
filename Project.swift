@@ -21,7 +21,6 @@ let project = Project(
 //            resources: ["Resources/**"],
             dependencies: [],
             settings: .settings(base: [
-                "SWIFT_COMILATION_MODE": "singlefile"
             ])
         ),
         .target(
