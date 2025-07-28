@@ -11,7 +11,7 @@ final class TestingWildcardsTests {
         )
         #expect(combinations.count == 6)
         #expect(combinations.contains(where: {
-            $0.flag == false && $0.mode == .alpha //&& $0.name == "bob"
+            $0.flag == false && $0.mode == .alpha
         }))
     }
 
@@ -28,7 +28,6 @@ final class TestingWildcardsTests {
 
     @Test
     func callingInvariantCombinationsWithPrototype() {
-        // MARK: - Generate All Combinations
         let base = Example(name: "bob", flag: false, mode: .alpha, count: 0)
 
         let combinations = base.variants(
@@ -90,7 +89,6 @@ final class TestingWildcardsTests {
         #expect(combinations.count == 18)
     }
 
-    // TODO remove these uses of invariantCombinations!
     @Test(arguments:
         Example(name: "bob", flag: false, mode: .alpha, count: 0).variants (
             .wild(\.error),
@@ -175,10 +173,9 @@ final class TestingWildcardsTests {
         #expect(examples.count == 18)
     }
 
-
     // Getting all the variants passed in at once by using variantsList (instead of [ ])
     // Do this by putting [ ] around the param to func only.
-    // maybe if you want to test the expect total variant count.
+    // could be used if you want to test the expect total variant count.
     @Test(arguments:
         Example.variantsList(
             .wild(\.flag),
@@ -190,7 +187,6 @@ final class TestingWildcardsTests {
         #expect(examples.count == 6)
     }
 
-    // free v fixed? for the enum
     @Test(arguments:
         Example.variants(
             .wild(\.flag),
@@ -229,32 +225,4 @@ final class TestingWildcardsTests {
         // test something always true while invariants changing
         #expect(example.name == "bob")
     }
-
-//    @Test(arguments:
-//        Example.variantsList(
-//            .wild(\.flag),
-//            .values(\.count, [0, 5, 10]),
-//        )
-//    )
-//    func truthTableGeneration(_ examples: [Example]) {
-//        // we can count the variants because we've passed them all in at once
-//        #expect(examples.count == 6)
-//    }
-
-
-// //    can't do closures easily due to hashable requirement.
-// //    could do e.g. NamedClosure hack (which takes an id string), but..
-//    @Test(arguments:
-//            Example.variants(
-//                .values(\Example.handler,
-//                         [{ x in x },
-////                         { $0 * 2 },
-////                         { $0 + 10 }
-//                         ]
-//                       )
-//            )
-//    )
-//    func testClosureExpressions() {
-//
-//    }
 }

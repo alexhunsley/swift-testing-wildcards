@@ -27,7 +27,8 @@ struct FilePermission: OptionSet, Equatable, InvariantOptionSet {
 }
 
 struct Example: WildcardPrototyping, CustomStringConvertible, Equatable {
-    // recommended pattern -- set all properties values to default
+    // recommended pattern -- set all properties values to default values
+    // and get no-param init for free
     var name: String = "bob"
     var flag: Bool = false
     var mode: Mode = .alpha

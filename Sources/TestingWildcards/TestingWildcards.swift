@@ -63,7 +63,7 @@ public func invariantCombinations<T>(
     wildcardPaths: [WildcardPath<T>] = []
 ) -> [T] {
 
-    // we collect keyPath/set/values as sequences
+    // collect keyPath/set/values as sequences
     let combined: [(keyPath: PartialKeyPath<T>, set: (inout T, Any) -> Void, values: AnySequence<Any>)] =
         wildcardPaths.map { wildcardPath in
             switch wildcardPath {
@@ -75,13 +75,11 @@ public func invariantCombinations<T>(
 
     let allValueSets: [[Any]] = combined.map { Array($0.values) }
 
-    // Estimate total number of combinations
-    let estimatedCount = allValueSets.reduce(1) { $0 * max($1.count, 1) }
-    print("estimated count: \(estimatedCount), from allValueSets = \(allValueSets)")
+    let comboCount = allValueSets.reduce(1) { $0 * max($1.count, 1) }
 
-    precondition(estimatedCount <= 10_000, "Too many combinations: \(estimatedCount)")
+    precondition(comboCount <= 10_000, "Too many combinations: \(comboCount)")
 
-    // cartesian product
+    // cartesian product gives all combos
     func product(_ sets: [[Any]]) -> [[Any]] {
         sets.reduce([[]]) { acc, values in
             acc.flatMap { prefix in values.map { prefix + [$0] } }
