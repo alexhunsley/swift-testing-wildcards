@@ -1,7 +1,6 @@
 import Foundation
 import Testing
-//import TestingWildcards
-@testable import TestingWildcards
+import TestingWildcards
 
 final class TestingWildcardsTests {
     @Test
@@ -191,6 +190,7 @@ final class TestingWildcardsTests {
         #expect(examples.count == 6)
     }
 
+    // free v fixed? for the enum
     @Test(arguments:
         Example.variants(
             .wild(\.flag),
