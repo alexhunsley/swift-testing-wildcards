@@ -58,7 +58,7 @@ public struct VariantKeyPath<Root> {
     }
 }
 
-func invariantCombinations<T>(
+public func invariantCombinations<T>(
     _ base: T,
     wildcardPaths: [WildcardPath<T>] = []
 ) -> [T] {
