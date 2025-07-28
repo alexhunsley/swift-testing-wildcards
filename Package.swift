@@ -20,7 +20,6 @@ let package = Package(
             path: "Sources",
             sources: [
                 "TestingWildcards.swift",
-                "TestingWildcardsApp.swift",
                 "Helpers",
                 "Invariants"
             ]
