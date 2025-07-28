@@ -6,7 +6,7 @@ let project = Project(
         .target(
             name: "TestingWildcards",
             destinations: .iOS,
-            product: .app,
+            product: .staticLibrary,
             bundleId: "dev.tuist.TestingWildcards",
             deploymentTargets: .iOS("15.0"),
             infoPlist: .extendingDefault(
