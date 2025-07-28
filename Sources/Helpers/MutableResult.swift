@@ -1,15 +1,15 @@
 public struct MutableResult<Success, Failure: Error>: Equatable where Success: Equatable, Failure: Equatable {
-    var success: Success?
+    public var success: Success?
 
-    var failure: Failure?
+    public var failure: Failure?
 
-    init(success: Success? = nil, failure: Failure? = nil) {
+    public  init(success: Success? = nil, failure: Failure? = nil) {
         precondition(success == nil || failure == nil, "Cannot initialize with both success and failure")
         self.success = success
         self.failure = failure
     }
 
-    var result: Result<Success, Failure>? {
+    public var result: Result<Success, Failure>? {
         switch (success, failure) {
         case let (success?, nil):
             return .success(success)
