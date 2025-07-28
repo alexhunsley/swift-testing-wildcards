@@ -5,7 +5,7 @@ This is an experimental tool for reducing boilerplate and tedium when writing te
 
 The idea is to make tests easier to write, and easier to read, by having a way to explicitly define combinations that signals intent.
 
-To install, add this URL to your SPM dependencies:
+To use this helper add this URL to your SPM dependencies:
 
 ```
 https://github.com/alexhunsley/swift-testing-wildcards
@@ -73,13 +73,13 @@ In order to use this technique we must define a simple mutable helper struct:
     }
 ```
 
-To conform to `WildcardPrototyping` you must have a no-param init; you get that for free if you initialise all your properties as you declare them.
+To conform to `WildcardPrototyping` you must have a no-param init; you get that for free if you initialise all your properties as you declare them (recommended).
 
 This struct specifies a prototype value for your test. Any properties your `.variants` invocation doesn't override have the default value defined in the prototype.
 
 ## The flexibility of `Sequence`
 
-`.values` takes a Sequence which is great for expressiveness. Examples:
+`.values` takes a `Sequence` which is great for expressiveness. Examples:
 
 ```
     // this bool will only be false
@@ -118,7 +118,7 @@ You can use a `.filter` to remove any specific combos you don't want. Example:
 
 ## Can I get all the variants passed into my test method as a list?
 
-Yes, by calling `.variantsList` instead of `.variants`, and receiving an array to your func. Exmaple:
+Yes, by calling `.variantsList` instead of `.variants`, and receiving an array to your func. Example:
 
 ```swift
     @Test("if retry is disabled then shouldRetry always returns false", arguments:
@@ -134,6 +134,8 @@ Yes, by calling `.variantsList` instead of `.variants`, and receiving an array t
         // this func will only be called once with all the variants in a list
     }
 ```
+
+This isn't recommended though; `Testing` gives better test feedback when you use `.variants`.
 
 ## Use outside of `Testing`
 
