@@ -1,9 +1,15 @@
 
-# Wildcard helper for Swift Testing
+# Wildcard helper for Swift `Testing`
 
-This is an experimental tool for reducing boilerplate and tedium when tests.
+This is an experimental tool for reducing boilerplate and tedium when writing tests.
 
 The idea is to make tests easier to write, and easier to read, by having a way to explicitly define combinations that signals intent.
+
+To install, add this URL to your SPM dependencies:
+
+```
+https://github.com/alexhunsley/swift-testing-wildcards
+```
 
 ## Example
 
