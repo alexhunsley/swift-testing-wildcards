@@ -9,4 +9,3 @@ extension InvariantOptionSet {
         return AnySequence((0...max).compactMap { Self(rawValue: $0) })
     }
 }
-
