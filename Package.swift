@@ -17,7 +17,7 @@ let package = Package(
     targets: [
         .target(
             name: "TestingWildcards",
-            path: "Sources",
+            path: "Sources/TestingWildcards",
             sources: [
                 "TestingWildcards.swift",
                 "Helpers",
@@ -27,7 +27,7 @@ let package = Package(
         .testTarget(
             name: "TestingWildcardsTests",
             dependencies: ["TestingWildcards"],
-            path: "Tests",
+            path: "Tests/TestingWildcardsTests",
             sources: [
                 "TestingWildcardsTests.swift",
                 "WildcardTestHelpers.swift"
