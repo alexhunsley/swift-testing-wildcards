@@ -19,7 +19,10 @@ let project = Project(
             ),
             sources: ["Sources/**"],
 //            resources: ["Resources/**"],
-            dependencies: []
+            dependencies: [],
+            settings: .settings(base: [
+                "SWIFT_COMILATION_MODE": "singlefile"
+            ])
         ),
         .target(
             name: "TestingWildcardsTests",
