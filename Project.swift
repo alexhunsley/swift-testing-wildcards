@@ -8,7 +8,7 @@ let project = Project(
             destinations: .iOS,
             product: .staticLibrary,
             bundleId: "dev.tuist.TestingWildcards",
-            deploymentTargets: .iOS("15.0"),
+            deploymentTargets: .iOS("16.0"),
             infoPlist: .extendingDefault(
                 with: [
                     "UILaunchScreen": [
@@ -29,7 +29,7 @@ let project = Project(
             destinations: .iOS,
             product: .unitTests,
             bundleId: "dev.tuist.TestingWildcardsTests",
-            deploymentTargets: .iOS("15.0"),
+            deploymentTargets: .iOS("16.0"),
             infoPlist: .default,
             sources: ["Tests/**"],
             resources: [],
