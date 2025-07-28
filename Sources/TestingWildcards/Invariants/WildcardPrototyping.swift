@@ -3,26 +3,26 @@ public protocol WildcardPrototyping {
 }
 
 public extension WildcardPrototyping {
-    public func variants(
+    func variants(
         _ wildcardPaths: WildcardPath<Self>...
     ) -> [Self] {
         invariantCombinations(self, wildcardPaths: wildcardPaths)
     }
 
-    public static func variants(
+    static func variants(
         _ wildcardPaths: WildcardPath<Self>...
     ) -> [Self] {
         invariantCombinations(Self(), wildcardPaths: wildcardPaths)
     }
 
-    public static func variants(
+    static func variants(
         _ wildcardPaths: [WildcardPath<Self>]
     ) -> [Self] {
         invariantCombinations(Self(), wildcardPaths: wildcardPaths)
     }
 
     // for if you want to pass all variants as one into the test (as a list)
-    public static func variantsList(
+    static func variantsList(
         _ wildcardPaths: WildcardPath<Self>...
     ) -> [[Self]] {
         [invariantCombinations(Self(), wildcardPaths: wildcardPaths)]
