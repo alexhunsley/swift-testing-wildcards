@@ -227,6 +227,8 @@ final class TestingWildcardsTests {
         #expect(example.name == "bob")
     }
 
+    // MARK: - Tests using variantList to verify combos counts
+
     @Test(arguments:
             Example.variantsList(
                 .wild(\.mutableResult)
@@ -235,24 +237,27 @@ final class TestingWildcardsTests {
     func mutableResultValuesAll(_ examples: [Example]) {
         // test something always true while invariants changing
         #expect(examples.count == 4)
-
-//        print("MutableResult examples: ")
-//        customDump(examples.map { $0.mutableResult })
-        //        print("MutableResult examples: ", examples.map { $0.mutableResult })
     }
 
     @Test(arguments:
-        Example.variantsList(
-            .wild(\.flag),
-            .wild(\.mutableResult)
-        )
+            Example.variantsList(
+                .wild(\.flag),
+                .wild(\.mutableResult)
+            )
     )
     func mutableResultValuesAllPlusFlag(_ examples: [Example]) {
         // test something always true while invariants changing
         #expect(examples.count == 8)
+    }
 
-        print("MutableResult examples: ")
-        customDump(examples.map { $0.mutableResult })
-//        print("MutableResult examples: ", examples.map { $0.mutableResult })
+    @Test(arguments:
+            Example.variantsList(
+                .wild(\.mutableResultOptionalSuccess)
+            )
+    )
+    func mutableResultWithOptionalSuccess(_ examples: [Example]) {
+        #expect(examples.count == 5)
+//        print("MutableResult examples: ")
+//        customDump(examples.map { $0.mutableResult })
     }
 }

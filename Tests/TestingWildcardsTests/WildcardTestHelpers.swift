@@ -39,6 +39,7 @@ struct Example: WildcardPrototyping, CustomStringConvertible, Equatable {
     var filePermission: FilePermission = .all
     var error: SomeError? = nil
     var mutableResult: MutableResult<Bool, SomeError> = .init()
+    var mutableResultOptionalSuccess: MutableResult<Bool?, SomeError> = .init()
 
     var description: String {
         "[Example name: \(name) flag: \(flag), mode: \(mode), count: \(count), abc: \(a) \(b) \(c) perm: \(filePermission) result: \(mutableResult) error: \(String(describing: error))])"

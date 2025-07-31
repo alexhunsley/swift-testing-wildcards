@@ -1,42 +1,34 @@
 /// Mutable helper for Result<Succcess, Failure>.
-/// You can retrieve a real Result instance via the `mutableResult.result` property.
+/// You can retrieve the real Result instance via the `mutableResult.result` property.
 public struct MutableResult<Success, Failure: Error>: Equatable where Success: Equatable, Failure: Equatable {
-    public var success: Success? = nil
-    public var failure: Failure? = nil
+    private(set) var result: Result<Success, Failure>?
 
-    public var result: Result<Success, Failure>? {
-        if let success {
-            return .success(success)
+    public var success: Success {
+        get { fatalError("Calling getter on MutableResult `success` is not allowed") }
+        set {
+            precondition(result == nil, "MutableResult already contains a value")
+            result = .success(newValue)
         }
-        if let failure {
-            return .failure(failure)
+    }
+    public var failure: Failure {
+        get { fatalError("Calling getter on MutableResult `failure` is not allowed") }
+        set {
+            precondition(result == nil, "MutableResult already contains a value")
+            result = .failure(newValue)
         }
-        return nil
     }
 }
 
 extension MutableResult: InvariantValues where Success: InvariantValues, Failure: InvariantValues {
     public static var allValues: AnySequence<MutableResult<Success, Failure>> {
         let successVariants = Success.allValues.map {
-            MutableResult(success: $0)
+            MutableResult(result: .success($0))
         }
 
         let failureVariants = Failure.allValues.map {
-            MutableResult(failure: $0)
+            MutableResult(result: .failure($0))
         }
 
         return AnySequence(successVariants + failureVariants)
-    }
-}
-
-extension MutableResult {
-    public func get() throws -> Success {
-        if let success {
-            return success
-        }
-        if let failure {
-            throw failure
-        }
-        preconditionFailure("MutableResult.get(): success and failure are both nil")
     }
 }
