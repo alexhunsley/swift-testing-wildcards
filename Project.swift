@@ -17,7 +17,7 @@ let project = Project(
                     ],
                 ]
             ),
-            sources: ["Sources/**"],
+            sources: ["Package/Sources/**"],
 //            resources: ["Resources/**"],
             dependencies: [],
             settings: .settings(base: [
@@ -35,7 +35,7 @@ let project = Project(
             bundleId: "dev.tuist.TestingWildcardsTests",
             deploymentTargets: .iOS("16.0"),
             infoPlist: .default,
-            sources: ["Tests/**"],
+            sources: ["Package/Tests/**"],
             resources: [],
             dependencies: [.target(name: "TestingWildcards")]
         ),
@@ -52,7 +52,7 @@ let project = Project(
 //        )
     ],
     additionalFiles: [
-        "README.md",
-        "Package.swift" // the SPM file
+        "Package/README.md",
+        "Package/Package.swift" // the SPM file
     ]
 )

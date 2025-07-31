@@ -1,8 +1,6 @@
 // swift-tools-version:5.9
 import PackageDescription
 
-
-// AH: this was created manually for SPM publishing
 let package = Package(
     name: "TestingWildcards",
     platforms: [
