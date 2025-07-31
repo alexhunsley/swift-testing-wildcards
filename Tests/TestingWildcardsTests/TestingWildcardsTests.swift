@@ -1,6 +1,7 @@
 import Foundation
 import Testing
 import TestingWildcards
+import CustomDump
 
 final class TestingWildcardsTests {
     @Test
@@ -90,10 +91,10 @@ final class TestingWildcardsTests {
     }
 
     @Test(arguments:
-        Example(name: "bob", flag: false, mode: .alpha, count: 0).variants (
-            .wild(\.error),
-            .wild(\.mode)
-        )
+            Example(name: "bob", flag: false, mode: .alpha, count: 0).variants (
+                .wild(\.error),
+                .wild(\.mode)
+            )
     )
     func usingAnOptionalError(_ example: Example) {
         // test something always true while invariants changing
@@ -107,10 +108,10 @@ final class TestingWildcardsTests {
 
     // variadic
     @Test(arguments:
-        Example.variants(
-            .wild(\.error),
-            .wild(\.mode)
-        )
+            Example.variants(
+                .wild(\.error),
+                .wild(\.mode)
+            )
     )
     func usingAnOptionalError2_variadic(_ example: Example) {
         // test something always true while invariants changing
@@ -119,10 +120,10 @@ final class TestingWildcardsTests {
 
     // passing in explicit list to variants()
     @Test(arguments:
-        Example.variants([
-            .wild(\.error),
-            .wild(\.mode)
-        ])
+            Example.variants([
+                .wild(\.error),
+                .wild(\.mode)
+            ])
     )
     func usingAnOptionalError2_explicitList(_ example: Example) {
         // test something always true while invariants changing
@@ -131,7 +132,7 @@ final class TestingWildcardsTests {
 
     // custom instance (not standard prototype) variants
     @Test(arguments:
-        Example(name: "sue", flag: false, mode: .alpha, count: 0)
+            Example(name: "sue", flag: false, mode: .alpha, count: 0)
         .variants(
             .wild(\.flag),
             .values(\.count, [0, 5, 10]),
@@ -145,11 +146,11 @@ final class TestingWildcardsTests {
 
     // use the combos gen in actually Test arguments, in base.call style
     @Test(arguments:
-        Example.variants(
-            .wild(\.flag),
-            .values(\.count, [0, 5, 10]),
-            .values(\.count, [0, 5, 10])
-        )
+            Example.variants(
+                .wild(\.flag),
+                .values(\.count, [0, 5, 10]),
+                .values(\.count, [0, 5, 10])
+            )
     )
     func repeatedManualWildcardsAreDuplicated(_ example: Example) {
         // test something always true while invariants changing
@@ -161,11 +162,11 @@ final class TestingWildcardsTests {
     // maybe if you want to test the expect total variant count.
     // * SEE ALSO variantsList below, which is nicer.
     @Test(arguments:
-        [Example.variants(
-            .wild(\.flag),
-            .values(\.count, [0, 5, 10]),
-            .values(\.count, [0, 5, 10])
-        )]
+            [Example.variants(
+                .wild(\.flag),
+                .values(\.count, [0, 5, 10]),
+                .values(\.count, [0, 5, 10])
+            )]
     )
     func repeatedManualWildcardsAreDuplicated_callStyle2b(_ examples: [Example]) {
         // test something always true while invariants changing
@@ -177,10 +178,10 @@ final class TestingWildcardsTests {
     // Do this by putting [ ] around the param to func only.
     // could be used if you want to test the expect total variant count.
     @Test(arguments:
-        Example.variantsList(
-            .wild(\.flag),
-            .values(\.count, [0, 5, 10]),
-        )
+            Example.variantsList(
+                .wild(\.flag),
+                .values(\.count, [0, 5, 10]),
+            )
     )
     func variantsListPassesInAllVariantsAsOneList(_ examples: [Example]) {
         // we can count the variants because we've passed them all in at once
@@ -188,14 +189,14 @@ final class TestingWildcardsTests {
     }
 
     @Test(arguments:
-        Example.variants(
-            .wild(\.flag),
-            .values(\.count, 10...12),
-            .values(\.mode, [.beta, .gamma]),
-            .values(\.a, stride(from: 2, to: 4, by: 2)),
-            .values(\.b, stride(from: 0, through: 5, by: 3)),
-            .values(\.c, [20, 31, 56]),
-        )
+            Example.variants(
+                .wild(\.flag),
+                .values(\.count, 10...12),
+                .values(\.mode, [.beta, .gamma]),
+                .values(\.a, stride(from: 2, to: 4, by: 2)),
+                .values(\.b, stride(from: 0, through: 5, by: 3)),
+                .values(\.c, [20, 31, 56]),
+            )
     )
     func valuesAsRange(_ example: Example) {
         // test something always true while invariants changing
@@ -204,10 +205,10 @@ final class TestingWildcardsTests {
     }
 
     @Test(arguments:
-        Example.variants(
-            .wild(\.filePermission),
-            .values(\.count, 10...12),
-        )
+            Example.variants(
+                .wild(\.filePermission),
+                .values(\.count, 10...12),
+            )
     )
     func optionSetValues(_ example: Example) {
         // test something always true while invariants changing
@@ -216,13 +217,42 @@ final class TestingWildcardsTests {
     }
 
     @Test(arguments:
-        Example.variants(
-            .wild(\.flag),
-            .wild(\.mutableResult)
-        )
+            Example.variants(
+                .wild(\.flag),
+                .wild(\.mutableResult)
+            )
     )
     func mutableResultValues(_ example: Example) {
         // test something always true while invariants changing
         #expect(example.name == "bob")
+    }
+
+    @Test(arguments:
+            Example.variantsList(
+                .wild(\.mutableResult)
+            )
+    )
+    func mutableResultValuesAll(_ examples: [Example]) {
+        // test something always true while invariants changing
+        #expect(examples.count == 4)
+
+//        print("MutableResult examples: ")
+//        customDump(examples.map { $0.mutableResult })
+        //        print("MutableResult examples: ", examples.map { $0.mutableResult })
+    }
+
+    @Test(arguments:
+        Example.variantsList(
+            .wild(\.flag),
+            .wild(\.mutableResult)
+        )
+    )
+    func mutableResultValuesAllPlusFlag(_ examples: [Example]) {
+        // test something always true while invariants changing
+        #expect(examples.count == 8)
+
+        print("MutableResult examples: ")
+        customDump(examples.map { $0.mutableResult })
+//        print("MutableResult examples: ", examples.map { $0.mutableResult })
     }
 }

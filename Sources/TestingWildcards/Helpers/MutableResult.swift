@@ -1,35 +1,28 @@
+/// Mutable helper for Result<Succcess, Failure>.
+/// You can retrieve a real Result instance via the `mutableResult.result` property.
 public struct MutableResult<Success, Failure: Error>: Equatable where Success: Equatable, Failure: Equatable {
-    public var success: Success?
-
-    public var failure: Failure?
-
-    public  init(success: Success? = nil, failure: Failure? = nil) {
-        precondition(success == nil || failure == nil, "Cannot initialize with both success and failure")
-        self.success = success
-        self.failure = failure
-    }
+    public var success: Success? = nil
+    public var failure: Failure? = nil
 
     public var result: Result<Success, Failure>? {
-        switch (success, failure) {
-        case let (success?, nil):
+        if let success {
             return .success(success)
-        case let (nil, failure?):
-            return .failure(failure)
-        default:
-            // Ambiguous or empty
-            return nil
         }
+        if let failure {
+            return .failure(failure)
+        }
+        return nil
     }
 }
 
 extension MutableResult: InvariantValues where Success: InvariantValues, Failure: InvariantValues {
     public static var allValues: AnySequence<MutableResult<Success, Failure>> {
         let successVariants = Success.allValues.map {
-            MutableResult(success: $0, failure: nil)
+            MutableResult(success: $0)
         }
 
         let failureVariants = Failure.allValues.map {
-            MutableResult(success: nil, failure: $0)
+            MutableResult(failure: $0)
         }
 
         return AnySequence(successVariants + failureVariants)
@@ -38,15 +31,12 @@ extension MutableResult: InvariantValues where Success: InvariantValues, Failure
 
 extension MutableResult {
     public func get() throws -> Success {
-        switch (success, failure) {
-        case let (success?, nil):
+        if let success {
             return success
-        case let (nil, failure?):
-            throw failure
-        case (nil, nil):
-            preconditionFailure("MutableResult.get(): neither success nor failure is set")
-        case (_?, _?):
-            preconditionFailure("MutableResult.get(): both success and failure are set — ambiguous")
         }
+        if let failure {
+            throw failure
+        }
+        preconditionFailure("MutableResult.get(): success and failure are both nil")
     }
 }
