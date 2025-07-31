@@ -3,6 +3,12 @@
 public struct MutableResult<Success, Failure: Error>: Equatable where Success: Equatable, Failure: Equatable {
     private(set) var result: Result<Success, Failure>? = nil
 
+    public init() { }
+
+    public init(result: Result<Success, Failure>) {
+        self.result = result
+    }
+
     public var success: Success {
         get { fatalError("Calling getter on MutableResult `success` is not allowed") }
         set {
