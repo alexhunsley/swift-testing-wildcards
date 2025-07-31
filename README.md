@@ -27,8 +27,7 @@ Suppose you've writing tests for a some feature flags. In bog standard Swift `Te
         (false, false, 2),
         (true, false, 2),
         (false, true, 2),
-        (true, true, 2),
-
+        (true, true, 2)
     ])
     func featureFlags(flagNewUI: Int,
                       flagOfflineAllowed: Int,
@@ -116,9 +115,11 @@ You can use a `.filter` to remove any specific combos you don't want. Example:
         .filter { $0.newUI || $0.offlineAllowed }
 ```
 
-## Can I get all the variants passed into my test method as a list?
+## Can I get all the variants as a list?
 
-Yes, by calling `.variantsList` instead of `.variants`, and receiving an array to your func. Example:
+Yes, by calling `.variantsList` instead of `.variants`.
+
+If you wanted to suck that into a test func, just receiving an array param, like so:
 
 ```swift
     @Test("if retry is disabled then shouldRetry always returns false", arguments:
@@ -137,9 +138,14 @@ Yes, by calling `.variantsList` instead of `.variants`, and receiving an array t
 
 This isn't recommended though; `Testing` gives better test feedback when you use `.variants`.
 
+## What can I use `.wild` on?
+* `Bool`
+* `enum`: must be `CaseIterable` compatible and be marked with the `WildcardEnum` protocol. This means some of your `Error` types can be used too 
+* `Optional`: its wrapped type must be `.wild` compatible; its generated values for the test are `nil` plus all possible values of the wrapped type
+* `MutableResult`: a provided helper similar to Result. Your success and failure types must be `.wild` compatible. You must use the provided `MutableResult` in your prototype struct and then in your test func you access the real `Result` via the `someMutableResult.result` property
 ## Use outside of `Testing`
 
-Although this experiment is made with `Testing` in mind, you can use it in any context, for example:
+Although this experimental helper is made with `Testing` in mind, you can use it in any context, for example:
 
 ```swift
     struct RetryParam: WildcardPrototyping {
@@ -149,7 +155,7 @@ Although this experiment is made with `Testing` in mind, you can use it in any c
         var connectionStatus = ConnectionStatus.offline
     }
     
-    let variants = RetryParam.variants(
+let variants = RetryParam.variantsList(
         .values(\.retryEnabled, false),
         .values(\.retryCount, 0..2),
         .values(\.lastAttemptErrorCode, [401, 403]),
@@ -161,9 +167,8 @@ Although this experiment is made with `Testing` in mind, you can use it in any c
 
 ## Ideas
 
-1. Could add a peer macro to make it nicer to call, e.g. `@TestWildcards`.
+Could add a peer macro to make it even easier to call, e.g. `@TestWildcards` which would rewrite to a `@Test` macro.
 
-2. We could have a `.wildSample` that would allow infinite type wildcarding by making you specify a random choice function on the type and how many samples to take. (In the interests of maintaining deterministic testing the random choice should be based on the same random seed and alg each time.) Such an idea could also be applied to iterators with potentially infinite values to provide; you just give a count for how many values to take.
 
 ## Design choices
 
@@ -176,8 +181,7 @@ If you repeat one of the variant spec lines, for example:
 ```swift
     let variants = RetryParam.variants(
         .values(\.retryEnabled, false),
-        .values(\.retryEnabled, false),
-    // ...
+    .values(\.retryEnabled, false), // oh no, same thing twice!
 ```
 
 then your generated variants will contain duplicates or can crash the tests, which isn't ideal.
