@@ -1,7 +1,7 @@
 /// Mutable helper for Result<Succcess, Failure>.
 /// You can retrieve the real Result instance via the `mutableResult.result` property.
 public struct MutableResult<Success, Failure: Error>: Equatable where Success: Equatable, Failure: Equatable {
-    private(set) var result: Result<Success, Failure>?
+    private(set) var result: Result<Success, Failure>? = nil
 
     public var success: Success {
         get { fatalError("Calling getter on MutableResult `success` is not allowed") }
