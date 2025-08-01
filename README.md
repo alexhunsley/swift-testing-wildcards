@@ -119,7 +119,7 @@ You can use a `.filter` to remove any specific combos you don't want. Example:
 
 Yes, by calling `.variantsList` instead of `.variants`.
 
-If you wanted to suck that into a test func, just receiving an array param, like so:
+If you wanted to receive that list in a test func use an array parameter like this:
 
 ```swift
     @Test("if retry is disabled then shouldRetry always returns false", arguments:
