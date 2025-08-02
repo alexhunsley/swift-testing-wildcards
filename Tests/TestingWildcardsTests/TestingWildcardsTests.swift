@@ -219,7 +219,7 @@ final class TestingWildcardsTests {
     @Test(arguments:
             Example.variants(
                 .wild(\.flag),
-                .wild(\.mutableResult)
+                .wild(\.result)
             )
     )
     func mutableResultValues(_ example: Example) {
@@ -231,7 +231,7 @@ final class TestingWildcardsTests {
 
     @Test(arguments:
             Example.variantsList(
-                .wild(\.mutableResult)
+                .wild(\.result)
             )
     )
     func mutableResultValuesAll(_ examples: [Example]) {
@@ -242,7 +242,7 @@ final class TestingWildcardsTests {
     @Test(arguments:
             Example.variantsList(
                 .wild(\.flag),
-                .wild(\.mutableResult)
+                .wild(\.result)
             )
     )
     func mutableResultValuesAllPlusFlag(_ examples: [Example]) {
