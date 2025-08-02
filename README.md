@@ -94,6 +94,7 @@ This struct specifies a prototype value for your test. Any properties your `.var
     .values(\.numItemsInBasket, someInfiniteSequence.prefix(5))
 ```
 
+
 ## What can I use `.wild` on?
 
 * `Bool`
@@ -115,11 +116,10 @@ You can use a `.filter` to remove any specific combos you don't want. Example:
         .filter { $0.newUI || $0.offlineAllowed }
 ```
 
-## Can I get all the variants as a list?
 
-Yes, by calling `.variantsList` instead of `.variants`.
+## Can I get all the variants into a test func as a single list?
 
-If you wanted to receive that list in a test func use an array parameter like this:
+Yes, by calling `.variantsList` instead of `.variants`:
 
 ```swift
     @Test("if retry is disabled then shouldRetry always returns false", arguments:
@@ -139,10 +139,12 @@ If you wanted to receive that list in a test func use an array parameter like th
 This isn't recommended though; `Testing` gives better test feedback when you use `.variants`.
 
 ## What can I use `.wild` on?
+
 * `Bool`
 * `enum`: must be `CaseIterable` compatible and be marked with the `WildcardEnum` protocol. This means some of your `Error` types can be used too 
 * `Optional`: its wrapped type must be `.wild` compatible; its generated values for the test are `nil` plus all possible values of the wrapped type
 * `MutableResult`: a provided helper similar to Result. Your success and failure types must be `.wild` compatible. You must use the provided `MutableResult` in your prototype struct and then in your test func you access the real `Result` via the `someMutableResult.result` property
+
 ## Use outside of `Testing`
 
 Although this experimental helper is made with `Testing` in mind, you can use it in any context, for example:
