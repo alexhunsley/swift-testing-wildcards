@@ -21,7 +21,8 @@ public extension WildcardPrototyping {
         invariantCombinations(Self(), wildcardPaths: wildcardPaths)
     }
 
-    // for if you want to pass all variants as one into the test (as a list)
+    /// for retrieving all variants as a (single item) list of lists; particularly useful
+    /// if you want to pass a single list of variants into a @Test func.
     static func variantsList(
         _ wildcardPaths: WildcardPath<Self>...
     ) -> [[Self]] {
