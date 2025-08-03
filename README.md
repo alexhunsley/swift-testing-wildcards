@@ -60,7 +60,7 @@ We've replaced the tedious arguments list with a call to `FeatureFlagParams.vari
 
 `.values` means use the explicitly given values for that keypath. In this example we use `0...2`, but that expression can be any `Sequence`.
 
-In order to use this technique we must define a simple mutable helper struct:
+In order to use the above code we must define a simple mutable helper struct:
 
 ```swift
     // mutable struct with a no-param init
@@ -79,7 +79,7 @@ To conform to `WildcardPrototyping` you must be `Equatable` and have a no-param 
 
 `.values` takes a `Sequence` which is great for expressiveness. Examples:
 
-```
+```swift
     // this bool will only be false
     .values(\.newUI, false)
 
@@ -102,7 +102,7 @@ To conform to `WildcardPrototyping` you must be `Equatable` and have a no-param 
 * `Result`: your success and failure types must be `.wild` compatible
 * `OptionSet`: add the `InvariantOptionSet` marker protocol; must be `Equatable`
 
-## Can I omit specific combinations?
+## Can I omit certain combinations?
 
 You can use a `.filter` to remove any specific combos you don't want. Example:
 
@@ -150,7 +150,7 @@ Although this experimental helper is made with `Testing` in mind, you can use it
         var connectionStatus = ConnectionStatus.offline
     }
     
-let variants = RetryParam.variantsList(
+let variants = RetryParam.variants(
         .values(\.retryEnabled, false),
         .values(\.retryCount, 0..2),
         .values(\.lastAttemptErrorCode, [401, 403]),
@@ -175,7 +175,7 @@ If you repeat one of the variant spec lines, for example:
     .values(\.retryEnabled, false), // oh no, same thing twice!
 ```
 
-then your generated variants will contain duplicates or can crash the tests, which isn't ideal.
+then behaviour is undocumented. Usually, your generated variants will contain duplicates or the tests can crash, which isn't ideal.
 
 <!--
 
