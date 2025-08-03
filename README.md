@@ -1,7 +1,6 @@
-
 # Wildcard helper for Swift `Testing`
 
-This is an experimental tool for reducing boilerplate and tedium when writing tests.
+This is an experimental tool for reducing boilerplate and tedium when writing certain kinds of tests.
 
 The idea is to make tests easier to write, and easier to read, by having a way to explicitly define combinations that signals intent.
 
@@ -72,9 +71,9 @@ In order to use this technique we must define a simple mutable helper struct:
     }
 ```
 
-To conform to `WildcardPrototyping` you must have a no-param init; you get that for free if you initialise all your properties as you declare them (recommended).
-
 This struct specifies a prototype value for your test. Any properties your `.variants` invocation doesn't override have the default value defined in the prototype.
+
+To conform to `WildcardPrototyping` you must be `Equatable` and have a no-param init (hint: initialise all your properties as you declare them and you're covered).
 
 ## The flexibility of `Sequence`
 
@@ -94,13 +93,14 @@ This struct specifies a prototype value for your test. Any properties your `.var
     .values(\.numItemsInBasket, someInfiniteSequence.prefix(5))
 ```
 
-
 ## What can I use `.wild` on?
 
 * `Bool`
 * `enum`: must be `CaseIterable` compatible; add the `WildcardEnum` marker protocol
+* `Error`: some of your Error enums will be compatible (see `enum`)
 * `Optional`: its wrapped type must be `.wild` compatible; its generated values for the test are the `nil` value plus all possible values of the wrapped type
-* `MutableResult`: a provided helper similar to `Result`. Your success and failure types must be `.wild` compatible. You must use the provided `MutableResult` in your prototype struct and then in your test func you access the real `Result` via its `.result` property
+* `Result`: your success and failure types must be `.wild` compatible
+* `OptionSet`: add the `InvariantOptionSet` marker protocol; must be `Equatable`
 
 ## Can I omit specific combinations?
 
@@ -138,13 +138,6 @@ Yes, by calling `.variantsList` instead of `.variants`:
 
 This isn't recommended though; `Testing` gives better test feedback when you use `.variants`.
 
-## What can I use `.wild` on?
-
-* `Bool`
-* `enum`: must be `CaseIterable` compatible and be marked with the `WildcardEnum` protocol. This means some of your `Error` types can be used too 
-* `Optional`: its wrapped type must be `.wild` compatible; its generated values for the test are `nil` plus all possible values of the wrapped type
-* `MutableResult`: a provided helper similar to Result. Your success and failure types must be `.wild` compatible. You must use the provided `MutableResult` in your prototype struct and then in your test func you access the real `Result` via the `someMutableResult.result` property
-
 ## Use outside of `Testing`
 
 Although this experimental helper is made with `Testing` in mind, you can use it in any context, for example:
@@ -172,10 +165,6 @@ let variants = RetryParam.variantsList(
 Could add a peer macro to make it even easier to call, e.g. `@TestWildcards` which would rewrite to a `@Test` macro.
 
 
-## Design choices
-
-This helper uses mutability of a prototype to configure your test parameter. If instead it constructed the test parameter with the correct values from the get-go that might be nicer; for example we might not need the `MutableResult` helper.
-
 ## Known issues
 
 If you repeat one of the variant spec lines, for example:
@@ -188,38 +177,11 @@ If you repeat one of the variant spec lines, for example:
 
 then your generated variants will contain duplicates or can crash the tests, which isn't ideal.
 
-<!-- * `OptionSet` -->
-
 <!--
 
-## Ideas
+## Blue sky ideas
 
 * truth table outputter that makes a string with table containing all input variants and the result (it would be given some func to get that result)
 
-## ResultTypes
-
-Hasn't been made into invariant thing because it's immutable and currently this whole thing works via mutability.
-Workaround: use the provided MutableResultType and then call .result on it in the test to get the actual ResultType.
-
-    //    @Test
-    //    func resultTypes() {
-    //        typealias MyResult = Result<Bool, SomeError>
-    //        // Results aren't mutable! Guess we could built something to instantiate it, but... meh
-    //        let base = MyResult.success(true)
-    //    }
-
-
-
-### scratch
-
-```
-// thoughts:
-//
-// * one potential issue is that we mutate the prototype, so you need a mutable object.
-//   but the code you're testing might well take an immutable type.
-//
-//   But this tool is meant for driving Testing test cases, where you will
-//   probably construct the real type from it; so I think this mutable aspect is ok.
-```
 
 -->
