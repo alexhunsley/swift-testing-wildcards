@@ -1,4 +1,4 @@
-@testable import TestingWildcards
+import TestingWildcards
 
 enum Mode: CaseIterable, Equatable, InvariantValues, CustomStringConvertible {
     case alpha, beta, gamma

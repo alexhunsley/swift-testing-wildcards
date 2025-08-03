@@ -1,5 +1,3 @@
-import Foundation
-
 public enum WildcardPath<Root> {
     case wild(_ path: VariantKeyPath<Root>)
     case values(_ path: VariantKeyPath<Root>)

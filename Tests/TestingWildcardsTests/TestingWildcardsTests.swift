@@ -1,4 +1,3 @@
-import Foundation
 import Testing
 import TestingWildcards
 import CustomDump
