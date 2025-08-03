@@ -1,4 +1,4 @@
-public protocol WildcardPrototyping {
+public protocol WildcardPrototyping: Equatable {
     init()
 }
 
