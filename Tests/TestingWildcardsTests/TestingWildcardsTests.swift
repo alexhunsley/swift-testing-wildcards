@@ -222,7 +222,7 @@ final class TestingWildcardsTests {
                 .wild(\.mutableResult)
             )
     )
-    func mutableResultValues(_ example: Example) {
+    func resultValues(_ example: Example) {
         // test something always true while invariants changing
         #expect(example.name == "bob")
     }
@@ -231,10 +231,10 @@ final class TestingWildcardsTests {
 
     @Test(arguments:
             Example.variantsList(
-                .wild(\.mutableResult)
+                .wild(\.result)
             )
     )
-    func mutableResultValuesAll(_ examples: [Example]) {
+    func resultValuesAll_asList(_ examples: [Example]) {
         // test something always true while invariants changing
         #expect(examples.count == 4)
     }
@@ -245,19 +245,30 @@ final class TestingWildcardsTests {
                 .wild(\.mutableResult)
             )
     )
-    func mutableResultValuesAllPlusFlag(_ examples: [Example]) {
+    func resultValuesAllPlusFlag_asList(_ examples: [Example]) {
         // test something always true while invariants changing
         #expect(examples.count == 8)
     }
 
     @Test(arguments:
             Example.variantsList(
-                .wild(\.mutableResultOptionalSuccess)
+                .wild(\.result)
             )
     )
-    func mutableResultWithOptionalSuccess(_ examples: [Example]) {
+    func result_asList(_ examples: [Example]) {
+        #expect(examples.count == 4)
+        print("Result examples: ")
+        customDump(examples.map { $0.result })
+    }
+
+    @Test(arguments:
+            Example.variantsList(
+                .wild(\.resultOptionalSuccess)
+            )
+    )
+    func resultWithOptionalSuccess_asList(_ examples: [Example]) {
         #expect(examples.count == 5)
-//        print("MutableResult examples: ")
-//        customDump(examples.map { $0.mutableResult })
+        print("resultWithOptionalSuccess examples: ")
+        customDump(examples.map { $0.resultOptionalSuccess })
     }
 }
