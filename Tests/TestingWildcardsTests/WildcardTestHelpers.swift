@@ -12,7 +12,7 @@ enum Mode: CaseIterable, Equatable, InvariantValues, CustomStringConvertible {
     }
 }
 
-struct FilePermission: OptionSet, Equatable, InvariantOptionSet {
+struct FilePermission: OptionSet, InvariantOptionSet {
     let rawValue: Int
 
     static let read    = FilePermission(rawValue: 1 << 0)
