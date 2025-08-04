@@ -109,61 +109,60 @@ final class TestingWildcardsTests {
         #expect(example == Example.init())
     }
 
-    // variadic
+    @Test(arguments: Example.variantsList())
+    func givingNoParamsToVariantsGivesPlainPrototype_asList(examples: [Example]) {
+        #expect(examples == [Example.init()])
+    }
+
     @Test(arguments:
-            Example.variants(
+            Example.variantsList(
                 .wild(\.error),
                 .wild(\.mode)
             )
     )
-    func usingAnOptionalError(_ example: Example) {
-        // test something always true while invariants changing
-        #expect(example.name == "bob")
+    func usingAnOptionalError(_ examples: [Example]) {
+        #expect(examples.count == 9)
     }
 
     // custom instance (not standard prototype) variants
     @Test(arguments:
             Example(name: "sue", flag: false, mode: .alpha, count: 0)
-        .variants(
-            .wild(\.flag),
-            .values(\.count, [0, 5, 10]),
-            .values(\.count, [0, 5, 10])
+                .variantsList(
+                    .wild(\.flag),
+                    .values(\.count, [0, 5, 10]),
+                    .values(\.count, [0, 5, 10])
         )
     )
-    func repeatedManualWildcardsAreDuplicated_onCustomIntance(_ example: Example) {
-        // test something always true while invariants changing
-        #expect(example.name == "sue")
+    func repeatedManualWildcardsAreDuplicated_onCustomIntance(_ examples: [Example]) {
+        #expect(examples.count == 18)
     }
 
     // use the combos gen in actually Test arguments, in base.call style
     @Test(arguments:
-            Example.variants(
+            Example.variantsList(
                 .wild(\.flag),
                 .values(\.count, [0, 5, 10]),
                 .values(\.count, [0, 5, 10])
             )
     )
-    func repeatedManualWildcardsAreDuplicated(_ example: Example) {
-        // test something always true while invariants changing
-        #expect(example.name == "bob")
-    }
-
-    // Getting all the variants passed in at once!
-    // Do this by putting [ ] around the arguments and around param to func.
-    // maybe if you want to test the expect total variant count.
-    // * SEE ALSO variantsList below, which is nicer.
-    @Test(arguments:
-            [Example.variants(
-                .wild(\.flag),
-                .values(\.count, [0, 5, 10]),
-                .values(\.count, [0, 5, 10])
-            )]
-    )
-    func repeatedManualWildcardsAreDuplicated_callStyle2b(_ examples: [Example]) {
-        // test something always true while invariants changing
-        //        #expect(example.name == "bob")
+    func repeatedManualWildcardsAreDuplicated(_ examples: [Example]) {
         #expect(examples.count == 18)
     }
+
+//    // Getting all the variants passed in at once!
+//    // Do this by putting [ ] around the arguments and around param to func.
+//    // maybe if you want to test the expect total variant count.
+//    // * SEE ALSO variantsList below, which is nicer.
+//    @Test(arguments:
+//            [Example.variantsList(
+//                .wild(\.flag),
+//                .values(\.count, [0, 5, 10]),
+//                .values(\.count, [0, 5, 10])
+//            )]
+//    )
+//    func repeatedManualWildcardsAreDuplicated_callStyle2b(_ examples: [Example]) {
+//        #expect(examples.count == 18)
+//    }
 
     // Getting all the variants passed in at once by using variantsList (instead of [ ])
     // Do this by putting [ ] around the param to func only.
@@ -180,7 +179,7 @@ final class TestingWildcardsTests {
     }
 
     @Test(arguments:
-            Example.variants(
+            Example.variantsList(
                 .wild(\.flag),
                 .values(\.count, 10...12),
                 .values(\.mode, [.beta, .gamma]),
@@ -189,10 +188,11 @@ final class TestingWildcardsTests {
                 .values(\.c, [20, 31, 56]),
             )
     )
-    func valuesAsRange(_ example: Example) {
+    func valuesAsRange(_ examples: [Example]) {
         // test something always true while invariants changing
-        #expect(example.name == "bob")
-        #expect(10...12 ~= example.count)
+//        #expect(example.name == "bob")
+//        #expect(10...12 ~= example.count)
+        #expect(examples.count == 72)
     }
 
     @Test(arguments:
@@ -212,47 +212,46 @@ final class TestingWildcardsTests {
     // TODO write all the count-testing variantList version too!
 
     @Test(arguments:
-            Example.variants(
+            Example.variantsList(
                 .wild(\.flag),
                 .wild(\.result)
             )
     )
-    func resultWild(_ example: Example) {
-        // test something always true while invariants changing
-        #expect(example.name == "bob")
+    func resultWild(_ examples: [Example]) {
+        #expect(examples.count == 8)
     }
 
     @Test(arguments:
-            Example.variants(
+            Example.variantsList(
                 .wild(\.flag),
                 .wild(\.resultNeverError)
             )
     )
-    func resultNeverErrorWild(_ example: Example) {
-        // test something always true while invariants changing
-        #expect(example.name == "bob")
+    func resultNeverErrorWild_asList(_ examples: [Example]) {
+        #expect(examples.count == 4)
+        customDump(examples.map { $0.resultNeverError })
     }
 
     @Test(arguments:
-            Example.variants(
+            Example.variantsList(
                 .wild(\.flag),
                 .wild(\.resultNeverSuccess)
             )
     )
-    func resultNeverSuccessWild(_ example: Example) {
-        // test something always true while invariants changing
-        #expect(example.name == "bob")
+    func resultNeverSuccessWild_asList(_ examples: [Example]) {
+        #expect(examples.count == 4)
+        customDump(examples.map { $0.resultNeverSuccess })
     }
 
     @Test(arguments:
-            Example.variants(
+            Example.variantsList(
                 .wild(\.flag),
                 .wild(\.resultEmptySuccess)
             )
     )
-    func resultEmptySuccessWild(_ example: Example) {
-        // test something always true while invariants changing
-        #expect(example.name == "bob")
+    func resultEmptySuccessWild(_ examples: [Example]) {
+        #expect(examples.count == 6)
+        customDump(examples.map { $0.resultEmptySuccess })
     }
 
     @Test(arguments:
@@ -264,17 +263,16 @@ final class TestingWildcardsTests {
     func resultEmptySuccessWild_asList(_ examples: [Example]) {
         // test something always true while invariants changing
         #expect(examples.count == 6)
-        customDump(examples.map { $0.resultEmptySuccess })    }
+    }
 
     @Test(arguments:
-            Example.variants(
+            Example.variantsList(
                 .wild(\.flag),
                 .wild(\.resultOptionalSuccessNeverError)
             )
     )
-    func resultOptionalSuccessNeverErrorWild(_ example: Example) {
-        // test something always true while invariants changing
-        #expect(example.name == "bob")
+    func resultOptionalSuccessNeverErrorWild(_ examples: [Example]) {
+        #expect(examples.count == 6)
     }
 
     @Test(arguments:
@@ -292,14 +290,13 @@ final class TestingWildcardsTests {
     //
 
     @Test(arguments:
-            Example.variants(
+            Example.variantsList(
                 .wild(\.flag),
                 .wild(\.resultEmptyNeverError)
             )
     )
-    func resultEmptyNeverError(_ example: Example) {
-        // test something always true while invariants changing
-        #expect(example.name == "bob")
+    func resultEmptyNeverError(_ examples: [Example]) {
+        #expect(examples.count == 2)
     }
 
     @Test(arguments:
