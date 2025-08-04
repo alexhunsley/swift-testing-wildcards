@@ -1,6 +1,5 @@
 import Testing
 import TestingWildcards
-import CustomDump
 
 final class TestingWildcardsTests {
     @Test(arguments:
@@ -188,9 +187,6 @@ final class TestingWildcardsTests {
             )
     )
     func valuesAsRange(_ examples: [Example]) {
-        // test something always true while invariants changing
-//        #expect(example.name == "bob")
-//        #expect(10...12 ~= example.count)
         #expect(examples.count == 72)
     }
 
@@ -201,7 +197,6 @@ final class TestingWildcardsTests {
             )
     )
     func optionSetValues(_ example: Example) {
-        // test something always true while invariants changing
         #expect(example.name == "bob")
         #expect(10...12 ~= example.count)
     }
@@ -213,13 +208,10 @@ final class TestingWildcardsTests {
             )
     )
     func optionSetValues_asList(_ examples: [Example]) {
-        // test something always true while invariants changing
         #expect(examples.count == 24)
     }
 
     // MARK: - Result type
-
-    // TODO write all the count-testing variantList version too!
 
     @Test(arguments:
             Example.variantsList(
@@ -239,7 +231,6 @@ final class TestingWildcardsTests {
     )
     func resultNeverErrorWild_asList(_ examples: [Example]) {
         #expect(examples.count == 4)
-        customDump(examples.map { $0.resultNeverError })
     }
 
     @Test(arguments:
@@ -250,7 +241,6 @@ final class TestingWildcardsTests {
     )
     func resultNeverSuccessWild_asList(_ examples: [Example]) {
         #expect(examples.count == 4)
-        customDump(examples.map { $0.resultNeverSuccess })
     }
 
     @Test(arguments:
@@ -261,7 +251,6 @@ final class TestingWildcardsTests {
     )
     func resultEmptySuccessWild(_ examples: [Example]) {
         #expect(examples.count == 6)
-        customDump(examples.map { $0.resultEmptySuccess })
     }
 
     @Test(arguments:
@@ -271,7 +260,6 @@ final class TestingWildcardsTests {
             )
     )
     func resultEmptySuccessWild_asList(_ examples: [Example]) {
-        // test something always true while invariants changing
         #expect(examples.count == 6)
     }
 
@@ -287,14 +275,11 @@ final class TestingWildcardsTests {
 
     @Test(arguments:
             Example.variantsList(
-//                .wild(\.flag),
                 .wild(\.resultOptionalSuccessNeverError)
             )
     )
     func resultOptionalSuccessNeverErrorWild_asList(_ examples: [Example]) {
-        // test something always true while invariants changing
         #expect(examples.count == 3)
-        customDump(examples.map { $0.resultOptionalSuccessNeverError })
     }
 
     //
@@ -316,9 +301,6 @@ final class TestingWildcardsTests {
             )
     )
     func resultEmptyNeverError_asList(_ examples: [Example]) {
-        // test something always true while invariants changing
-        customDump(examples)
-//        pdiff(examples[0], examples[1])
         #expect(examples.count == 2)
     }
 
@@ -330,7 +312,6 @@ final class TestingWildcardsTests {
             )
     )
     func resultValuesAll_asList(_ examples: [Example]) {
-        // test something always true while invariants changing
         #expect(examples.count == 4)
     }
 
@@ -341,7 +322,6 @@ final class TestingWildcardsTests {
             )
     )
     func resultValuesAllPlusFlag_asList(_ examples: [Example]) {
-        // test something always true while invariants changing
         #expect(examples.count == 8)
     }
 
@@ -352,8 +332,6 @@ final class TestingWildcardsTests {
     )
     func result_asList(_ examples: [Example]) {
         #expect(examples.count == 4)
-        print("Result examples: ")
-        customDump(examples.map { $0.result })
     }
 
     @Test(arguments:
@@ -363,8 +341,6 @@ final class TestingWildcardsTests {
     )
     func resultWithOptionalSuccess_asList(_ examples: [Example]) {
         #expect(examples.count == 5)
-        print("resultWithOptionalSuccess examples: ")
-        customDump(examples.map { $0.resultOptionalSuccess })
     }
 }
 
@@ -399,14 +375,4 @@ extension TestingWildcardsTests {
         // and we'd have only 6.
         #expect(combinations.count == 18)
     }
-}
-
-// MARK: Helpers
-
-public func pdiff<T>(_ lhs: T, _ rhs: T, format: DiffFormat = .default) {
-    print(diff2(lhs, rhs))
-}
-
-public func diff2<T>(_ lhs: T, _ rhs: T, format: DiffFormat = .default) -> String {
-    diff(lhs, rhs) ?? "No diff"
 }

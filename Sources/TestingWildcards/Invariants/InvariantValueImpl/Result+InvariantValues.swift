@@ -17,26 +17,13 @@ extension Never: InvariantValues {
     }
 }
 
-// can't! Void is non-nominal.
-//extension Void: InvariantValues {
-//
-//}
-
-// distinction:
-//
-// Void is non-nominal tuple '()' for 'no return type' (but this result CAN return, just nothing).
-// Never means it can't return, because `enum Never { }` is not instantiable.
-//
-
-
-/// A nominal stand-in for Void (no value)
+/// A nominal stand-in for Void (no value), for use in e.g. `Result<empty, Error>`
 public struct Empty: Equatable, Sendable { }
+// access to the one instance of empty
 public let empty = Empty()
 
 extension Empty: InvariantValues {
     public static var allValues: AnySequence<Empty> {
-        // there’s exactly one inhabitant of Unit,
-        // so we return a sequence containing a single .init()
         return AnySequence([empty])
     }
 }
