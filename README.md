@@ -176,12 +176,3 @@ If you repeat one of the variant spec lines, for example:
 ```
 
 then behaviour is undocumented. Usually, your generated variants will contain duplicates or the tests can crash, which isn't ideal.
-
-<!--
-
-## Blue sky ideas
-
-* truth table outputter that makes a string with table containing all input variants and the result (it would be given some func to get that result)
-
-
--->
