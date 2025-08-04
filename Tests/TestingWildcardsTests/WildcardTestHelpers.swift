@@ -39,12 +39,12 @@ struct Example: WildcardPrototyping, CustomStringConvertible {
     var filePermission: FilePermission = .all
     var error: SomeError? = nil
 
-    // the Result zoo
     var result: Result<Bool, SomeError> = .success(false)
     var resultOptionalSuccess: Result<Bool?, SomeError> = .success(false)
     var resultNeverError: Result<Bool, Never> = .success(false)
     var resultNeverSuccess: Result<Never, SomeError> = .failure(.catWokeUp)
-    // results for side-effect things without any return value
+    // results for side-effect things without any return value.
+    // we define and use `Empty` as a stand-in for the non-nominal `Void`
     var resultEmptySuccess: Result<Empty, SomeError> = .success(empty)
     var resultOptionalSuccessNeverError: Result<Bool?, Never> = .success(false)
     var resultEmptyNeverError: Result<Empty, Never> = .success(empty)
@@ -59,13 +59,3 @@ enum SomeError: Error, Equatable, WildcardEnum {
     case catWokeUp
     case dogGotRainedOn
 }
-
-/*
-<Type, Error>
-<Type?, Error>
-<Never, Error>
-<Void, Error>
-<Type, Never>
-<Type?, Never>
-
-*/
