@@ -3,40 +3,86 @@ import TestingWildcards
 import CustomDump
 
 final class TestingWildcardsTests {
-    @Test
-    func wildcards() {
-        let combinations = Example.variants(
-            .wild(\.flag),
-            .wild(\.mode)
-        )
-        #expect(combinations.count == 6)
-        #expect(combinations.contains(where: {
+    @Test(arguments:
+            Example.variantsList(
+                .wild(\.mode)
+            )
+    )
+    func wildcard(examples: [Example]) {
+        #expect(examples.count == 3)
+        #expect(examples.contains(where: {
             $0.flag == false && $0.mode == .alpha
         }))
     }
 
-    @Test
-    func values() {
-        let combinations = Example.variants(
-            .values(\.count, [0, 5])
-        )
-        #expect(combinations.count == 2)
-        #expect(combinations.contains(where: {
+    @Test(arguments:
+            Example.variantsList(
+                .wild(\.flag),
+                .wild(\.mode)
+            )
+    )
+    func wildcards(examples: [Example]) {
+        #expect(examples.count == 6)
+        #expect(examples.contains(where: {
             $0.flag == false && $0.mode == .alpha
         }))
     }
 
-    @Test
-    func callingInvariantCombinationsWithPrototype() {
-        let base = Example(name: "bob", flag: false, mode: .alpha, count: 0)
+    @Test(arguments:
+            Example.variantsList(
+                .values(\.count, 3)
+            )
+    )
+    func value(examples: [Example]) {
+        #expect(examples.count == 1)
+    }
 
-        let combinations = base.variants(
-            .wild(\.flag),
-            .wild(\.mode),
-            .values(\.count, [0, 5])
-        )
-        #expect(combinations.count == 12)
-        #expect(combinations.contains(where: {
+    @Test(arguments:
+            Example.variantsList(
+                .values(\.count, [5, 4]),
+                .values(\.a, [11,57])
+            )
+    )
+    func values(examples: [Example]) {
+        #expect(examples.count == 4)
+    }
+
+    @Test(arguments:
+            Example.variantsList(
+                .values(\.count, [5, 4]),
+                .values(\.a, [11,57]),
+                .wild(\.flag),
+                .wild(\.mode)
+            )
+    )
+    func valuesAndWildcards(examples: [Example]) {
+        #expect(examples.count == 24)
+    }
+
+    @Test(arguments:
+            Example.variants(
+                .values(\.count, [5, 4]),
+                .values(\.a, [11, 57]),
+                .wild(\.flag),
+                .wild(\.mode)
+            )
+            .filter { $0.mode != .alpha && $0.a != 11}
+    )
+    func valuesAndWildcards_filter(example: Example) {
+        #expect(example.mode != .alpha && example.a != 11)
+    }
+
+    @Test(arguments:
+            Example(name: "bob", flag: false, mode: .alpha, count: 0)
+                .variantsList(
+                    .wild(\.flag),
+                    .wild(\.mode),
+                    .values(\.count, [0, 5])
+            )
+    )
+    func usingManualPrototype(examples: [Example]) {
+        #expect(examples.count == 12)
+        #expect(examples.contains(where: {
             $0.flag == false && $0.mode == .alpha
         }))
     }
@@ -58,48 +104,6 @@ final class TestingWildcardsTests {
         }))
     }
 
-    /// duplication of repeated wildcards is not desirable behaivour,
-    /// but I'm tracking it here as *known* behaviour
-    @Test
-    func repeatedSimpleWildcardsAreDuplicated() {
-        // MARK: - Generate All Combinations
-        let base = Example(name: "bob", flag: false, mode: .alpha, count: 0)
-
-        let combinations = base.variants(
-            .wild(\.flag),
-            .wild(\.flag),
-            .wild(\.mode)
-        )
-        // the repeated .simple(\.flag) gives us 2x2x3 = 12 combos. Ideally it wouldn't
-        // and we'd have only 6.
-        #expect(combinations.count == 12)
-    }
-
-    /// duplication of repeated wildcards is not desirable behaivour,
-    /// but I'm tracking it here as *known* behaviour
-    @Test
-    func repeatedManualWildcardsAreDuplicated() {
-        let combinations = Example.variants(
-            .wild(\.flag),
-            .values(\.count, [0, 5, 10]),
-            .values(\.count, [0, 5, 10])
-        )
-        // the repeated .manual gives us 2x3x3 = 18 combos. Ideally it wouldn't
-        // and we'd have only 6.
-        #expect(combinations.count == 18)
-    }
-
-    @Test(arguments:
-            Example(name: "bob", flag: false, mode: .alpha, count: 0).variants (
-                .wild(\.error),
-                .wild(\.mode)
-            )
-    )
-    func usingAnOptionalError(_ example: Example) {
-        // test something always true while invariants changing
-        #expect(example.name == "bob")
-    }
-
     @Test(arguments: Example.variants())
     func givingNoParamsToVariantsGivesPlainPrototype(example: Example) {
         #expect(example == Example.init())
@@ -112,19 +116,7 @@ final class TestingWildcardsTests {
                 .wild(\.mode)
             )
     )
-    func usingAnOptionalError2_variadic(_ example: Example) {
-        // test something always true while invariants changing
-        #expect(example.name == "bob")
-    }
-
-    // passing in explicit list to variants()
-    @Test(arguments:
-            Example.variants([
-                .wild(\.error),
-                .wild(\.mode)
-            ])
-    )
-    func usingAnOptionalError2_explicitList(_ example: Example) {
+    func usingAnOptionalError(_ example: Example) {
         // test something always true while invariants changing
         #expect(example.name == "bob")
     }
@@ -215,15 +207,112 @@ final class TestingWildcardsTests {
         #expect(10...12 ~= example.count)
     }
 
+    // MARK: - Result type
+
+    // TODO write all the count-testing variantList version too!
+
     @Test(arguments:
             Example.variants(
                 .wild(\.flag),
                 .wild(\.result)
             )
     )
-    func resultValues(_ example: Example) {
+    func resultWild(_ example: Example) {
         // test something always true while invariants changing
         #expect(example.name == "bob")
+    }
+
+    @Test(arguments:
+            Example.variants(
+                .wild(\.flag),
+                .wild(\.resultNeverError)
+            )
+    )
+    func resultNeverErrorWild(_ example: Example) {
+        // test something always true while invariants changing
+        #expect(example.name == "bob")
+    }
+
+    @Test(arguments:
+            Example.variants(
+                .wild(\.flag),
+                .wild(\.resultNeverSuccess)
+            )
+    )
+    func resultNeverSuccessWild(_ example: Example) {
+        // test something always true while invariants changing
+        #expect(example.name == "bob")
+    }
+
+    @Test(arguments:
+            Example.variants(
+                .wild(\.flag),
+                .wild(\.resultEmptySuccess)
+            )
+    )
+    func resultEmptySuccessWild(_ example: Example) {
+        // test something always true while invariants changing
+        #expect(example.name == "bob")
+    }
+
+    @Test(arguments:
+            Example.variantsList(
+                .wild(\.flag),
+                .wild(\.resultEmptySuccess)
+            )
+    )
+    func resultEmptySuccessWild_asList(_ examples: [Example]) {
+        // test something always true while invariants changing
+        #expect(examples.count == 6)
+        customDump(examples.map { $0.resultEmptySuccess })    }
+
+    @Test(arguments:
+            Example.variants(
+                .wild(\.flag),
+                .wild(\.resultOptionalSuccessNeverError)
+            )
+    )
+    func resultOptionalSuccessNeverErrorWild(_ example: Example) {
+        // test something always true while invariants changing
+        #expect(example.name == "bob")
+    }
+
+    @Test(arguments:
+            Example.variantsList(
+//                .wild(\.flag),
+                .wild(\.resultOptionalSuccessNeverError)
+            )
+    )
+    func resultOptionalSuccessNeverErrorWild_asList(_ examples: [Example]) {
+        // test something always true while invariants changing
+        #expect(examples.count == 3)
+        customDump(examples.map { $0.resultOptionalSuccessNeverError })
+    }
+
+    //
+
+    @Test(arguments:
+            Example.variants(
+                .wild(\.flag),
+                .wild(\.resultEmptyNeverError)
+            )
+    )
+    func resultEmptyNeverError(_ example: Example) {
+        // test something always true while invariants changing
+        #expect(example.name == "bob")
+    }
+
+    @Test(arguments:
+            Example.variantsList(
+                .wild(\.flag),
+                .wild(\.resultEmptyNeverError)
+            )
+    )
+    func resultEmptyNeverError_asList(_ examples: [Example]) {
+        // test something always true while invariants changing
+        customDump(examples)
+//        pdiff(examples[0], examples[1])
+        #expect(examples.count == 2)
     }
 
     // MARK: - Tests using variantList to verify combos counts
@@ -270,4 +359,47 @@ final class TestingWildcardsTests {
         print("resultWithOptionalSuccess examples: ")
         customDump(examples.map { $0.resultOptionalSuccess })
     }
+}
+
+// MARK: - Tracking known bad behaviour
+/// duplication of repeated wildcards is not desirable behaivour,
+extension TestingWildcardsTests {
+    @Test
+    func repeatedSimpleWildcardsAreDuplicated() {
+        // MARK: - Generate All Combinations
+        let base = Example(name: "bob", flag: false, mode: .alpha, count: 0)
+
+        let combinations = base.variants(
+            .wild(\.flag),
+            .wild(\.flag),
+            .wild(\.mode)
+        )
+        // the repeated .simple(\.flag) gives us 2x2x3 = 12 combos. Ideally it wouldn't
+        // and we'd have only 6.
+        #expect(combinations.count == 12)
+    }
+
+    /// duplication of repeated wildcards is not desirable behaivour,
+    /// but I'm tracking it here as *known* behaviour
+    @Test
+    func repeatedManualWildcardsAreDuplicated() {
+        let combinations = Example.variants(
+            .wild(\.flag),
+            .values(\.count, [0, 5, 10]),
+            .values(\.count, [0, 5, 10])
+        )
+        // the repeated .manual gives us 2x3x3 = 18 combos. Ideally it wouldn't
+        // and we'd have only 6.
+        #expect(combinations.count == 18)
+    }
+}
+
+// MARK: Helpers
+
+public func pdiff<T>(_ lhs: T, _ rhs: T, format: DiffFormat = .default) {
+    print(diff2(lhs, rhs))
+}
+
+public func diff2<T>(_ lhs: T, _ rhs: T, format: DiffFormat = .default) -> String {
+    diff(lhs, rhs) ?? "No diff"
 }

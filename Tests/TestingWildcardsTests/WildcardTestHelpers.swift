@@ -38,8 +38,16 @@ struct Example: WildcardPrototyping, CustomStringConvertible {
     var c: Int = 0
     var filePermission: FilePermission = .all
     var error: SomeError? = nil
+
+    // the Result zoo
     var result: Result<Bool, SomeError> = .success(false)
     var resultOptionalSuccess: Result<Bool?, SomeError> = .success(false)
+    var resultNeverError: Result<Bool, Never> = .success(false)
+    var resultNeverSuccess: Result<Never, SomeError> = .failure(.catWokeUp)
+    // results for side-effect things without any return value
+    var resultEmptySuccess: Result<Empty, SomeError> = .success(empty)
+    var resultOptionalSuccessNeverError: Result<Bool?, Never> = .success(false)
+    var resultEmptyNeverError: Result<Empty, Never> = .success(empty)
 
     var description: String {
         "[Example name: \(name) flag: \(flag), mode: \(mode), count: \(count), abc: \(a) \(b) \(c) perm: \(filePermission) " +
@@ -51,3 +59,13 @@ enum SomeError: Error, Equatable, WildcardEnum {
     case catWokeUp
     case dogGotRainedOn
 }
+
+/*
+<Type, Error>
+<Type?, Error>
+<Never, Error>
+<Void, Error>
+<Type, Never>
+<Type?, Never>
+
+*/
