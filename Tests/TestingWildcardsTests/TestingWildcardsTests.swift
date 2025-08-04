@@ -87,19 +87,18 @@ final class TestingWildcardsTests {
         }))
     }
 
-    @Test
-    func wildcardsAndValuesIncludingOptional() {
+    @Test(arguments:
+            Example(name: "alex", flag: false, mode: .alpha, count: 0)
+                .variantsList(
+                    .wild(\.error),
+                    .wild(\.mode),
+                    .values(\.count, [0, 5])
+                )
+    )
+    func wildcardsAndValuesIncludingOptional(examples: [Example]) {
         // MARK: - Generate All Combinations
-        let base = Example(name: "alex", flag: false, mode: .alpha, count: 0)
-
-        let combinations = base.variants(
-            .wild(\.error),
-            .wild(\.mode),
-            .values(\.count, [0, 5])
-        )
-
-        #expect(combinations.count == 18)
-        #expect(combinations.contains(where: {
+        #expect(examples.count == 18)
+        #expect(examples.contains(where: {
             $0.count == 5 && $0.mode == .alpha
         }))
     }
@@ -205,6 +204,17 @@ final class TestingWildcardsTests {
         // test something always true while invariants changing
         #expect(example.name == "bob")
         #expect(10...12 ~= example.count)
+    }
+
+    @Test(arguments:
+            Example.variantsList(
+                .wild(\.filePermission),
+                .values(\.count, 10...12),
+            )
+    )
+    func optionSetValues_asList(_ examples: [Example]) {
+        // test something always true while invariants changing
+        #expect(examples.count == 24)
     }
 
     // MARK: - Result type
