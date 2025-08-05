@@ -191,7 +191,7 @@ If you repeat one of the variant spec lines, for example:
 ```swift
 let variants = RetryParam.variants(
     .values(\.retryEnabled, false),
-.values(\.retryEnabled, false), // oh no, same thing twice!
+    .values(\.retryEnabled, false), // oh no, same thing twice!
 ```
 
 then behaviour is undocumented. Usually, your generated variants will contain duplicates or the tests can crash, which isn't ideal.
