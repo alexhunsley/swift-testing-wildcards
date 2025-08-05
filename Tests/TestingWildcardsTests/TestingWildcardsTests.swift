@@ -240,6 +240,15 @@ final class TestingWildcardsTests {
 
     @Test(arguments:
             Example.variantsList(
+                .wild(\.resultOptionalNeverSuccessNeverError)
+            )
+    )
+    func resultOptionalNeverSuccessNeverErrorWild(_ examples: [Example]) {
+        #expect(examples.count == 1)
+    }
+
+    @Test(arguments:
+            Example.variantsList(
                 .wild(\.resultOptionalSuccessNeverError)
             )
     )

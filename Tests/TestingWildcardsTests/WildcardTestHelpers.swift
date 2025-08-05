@@ -46,6 +46,8 @@ struct Example: WildcardPrototyping, CustomStringConvertible {
     // results for side-effect things without any return value.
     // we define and use `Empty` as a stand-in for the non-nominal `Void`
     var resultOptionalSuccessNeverError: Result<Bool?, Never> = .success(false)
+    // just for completeness; we can declare the un-instantiable as an optional
+    var resultOptionalNeverSuccessNeverError: Result<Never, Never>? = nil
 
     var description: String {
         "[Example name: \(name) flag: \(flag), mode: \(mode), count: \(count), abc: \(a) \(b) \(c) perm: \(filePermission) " +
