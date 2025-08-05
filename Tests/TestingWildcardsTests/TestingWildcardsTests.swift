@@ -302,7 +302,7 @@ extension TestingWildcardsTests {
     @Test
     func repeatedSimpleWildcardsAreDuplicated() {
         // MARK: - Generate All Combinations
-        let base = Example(name: "bob", flag: false, mode: .alpha, count: 0)
+        let base = Example(name: "bob", flag: false, count: 0)
 
         let combinations = base.variants(
             .wild(\.flag),
