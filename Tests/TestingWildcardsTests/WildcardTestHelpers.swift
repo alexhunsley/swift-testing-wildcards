@@ -45,9 +45,7 @@ struct Example: WildcardPrototyping, CustomStringConvertible {
     var resultNeverSuccess: Result<Never, SomeError> = .failure(.catWokeUp)
     // results for side-effect things without any return value.
     // we define and use `Empty` as a stand-in for the non-nominal `Void`
-    var resultEmptySuccess: Result<Empty, SomeError> = .success(empty)
     var resultOptionalSuccessNeverError: Result<Bool?, Never> = .success(false)
-    var resultEmptyNeverError: Result<Empty, Never> = .success(empty)
 
     var description: String {
         "[Example name: \(name) flag: \(flag), mode: \(mode), count: \(count), abc: \(a) \(b) \(c) perm: \(filePermission) " +

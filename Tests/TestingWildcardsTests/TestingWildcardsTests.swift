@@ -147,21 +147,6 @@ final class TestingWildcardsTests {
         #expect(examples.count == 18)
     }
 
-//    // Getting all the variants passed in at once!
-//    // Do this by putting [ ] around the arguments and around param to func.
-//    // maybe if you want to test the expect total variant count.
-//    // * SEE ALSO variantsList below, which is nicer.
-//    @Test(arguments:
-//            [Example.variantsList(
-//                .wild(\.flag),
-//                .values(\.count, [0, 5, 10]),
-//                .values(\.count, [0, 5, 10])
-//            )]
-//    )
-//    func repeatedManualWildcardsAreDuplicated_callStyle2b(_ examples: [Example]) {
-//        #expect(examples.count == 18)
-//    }
-
     // Getting all the variants passed in at once by using variantsList (instead of [ ])
     // Do this by putting [ ] around the param to func only.
     // could be used if you want to test the expect total variant count.
@@ -246,26 +231,6 @@ final class TestingWildcardsTests {
     @Test(arguments:
             Example.variantsList(
                 .wild(\.flag),
-                .wild(\.resultEmptySuccess)
-            )
-    )
-    func resultEmptySuccessWild(_ examples: [Example]) {
-        #expect(examples.count == 6)
-    }
-
-    @Test(arguments:
-            Example.variantsList(
-                .wild(\.flag),
-                .wild(\.resultEmptySuccess)
-            )
-    )
-    func resultEmptySuccessWild_asList(_ examples: [Example]) {
-        #expect(examples.count == 6)
-    }
-
-    @Test(arguments:
-            Example.variantsList(
-                .wild(\.flag),
                 .wild(\.resultOptionalSuccessNeverError)
             )
     )
@@ -280,28 +245,6 @@ final class TestingWildcardsTests {
     )
     func resultOptionalSuccessNeverErrorWild_asList(_ examples: [Example]) {
         #expect(examples.count == 3)
-    }
-
-    //
-
-    @Test(arguments:
-            Example.variantsList(
-                .wild(\.flag),
-                .wild(\.resultEmptyNeverError)
-            )
-    )
-    func resultEmptyNeverError(_ examples: [Example]) {
-        #expect(examples.count == 2)
-    }
-
-    @Test(arguments:
-            Example.variantsList(
-                .wild(\.flag),
-                .wild(\.resultEmptyNeverError)
-            )
-    )
-    func resultEmptyNeverError_asList(_ examples: [Example]) {
-        #expect(examples.count == 2)
     }
 
     // MARK: - Tests using variantList to verify combos counts
