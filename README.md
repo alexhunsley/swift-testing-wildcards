@@ -104,7 +104,7 @@ To conform to `WildcardPrototyping` you must be `Equatable` and have a no-param 
 * `Error`: some of your Error enums will be compatible (see `enum`)
 * `Optional`: its wrapped type must be `.wild` compatible; its generated values for the test are the `nil` value plus all possible values of the wrapped type
 * `Result`: your success and failure types must be `.wild` compatible. Support is provided for `Result<Never, Error>`, and `Result<SomeType, Never>`.
-* `OptionSet`: add the `InvariantOptionSet` marker protocol; must be `Equatable`
+* `OptionSet`: add the `WildableOptionSet` marker protocol; must be `Equatable`
 ## Can I call `.variants` on an arbitrary instance of my helper type?
 
 Yes, just call `.variants` on your instance: 
