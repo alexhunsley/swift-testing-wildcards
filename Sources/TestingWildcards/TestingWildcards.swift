@@ -1,14 +1,14 @@
 public enum WildcardPath<Root> {
-    case wild(_ path: VariantKeyPath<Root>)
-    case values(_ path: VariantKeyPath<Root>)
+    case wild(_ path: VaryingKeyPath<Root>)
+    case values(_ path: VaryingKeyPath<Root>)
 
-    public static func wild<V: InvariantValues>(_ keyPath: WritableKeyPath<Root, V>) -> Self {
-        .wild(VariantKeyPath(keyPath))
+    public static func wild<V: Wildable>(_ keyPath: WritableKeyPath<Root, V>) -> Self {
+        .wild(VaryingKeyPath(keyPath))
     }
 
     public static func values<V: Hashable, S: Sequence>(_ keyPath: WritableKeyPath<Root, V>, _ values: S) -> Self where S.Element == V {
         let sequence = AnySequence(values)
-        return .values(VariantKeyPath(keyPath, values: sequence))
+        return .values(VaryingKeyPath(keyPath, values: sequence))
     }
 
     // a single value
@@ -17,11 +17,11 @@ public enum WildcardPath<Root> {
         _ value: V
     ) -> Self {
         let sequence = AnySequence([value])
-        return .values(VariantKeyPath(keyPath, values: sequence))
+        return .values(VaryingKeyPath(keyPath, values: sequence))
     }
 }
 
-public struct VariantKeyPath<Root> {
+public struct VaryingKeyPath<Root> {
     public let keyPath: PartialKeyPath<Root>
     public let set: (inout Root, Any) -> Void
     public let values: AnySequence<Any>
@@ -37,7 +37,7 @@ public struct VariantKeyPath<Root> {
     }
 
     /// From a type conforming to `InvariantValues`
-    public init<Value: InvariantValues>(
+    public init<Value: Wildable>(
         _ keyPath: WritableKeyPath<Root, Value>
     ) {
         self.keyPath = keyPath
@@ -56,7 +56,7 @@ public struct VariantKeyPath<Root> {
     }
 }
 
-public func invariantCombinations<T>(
+public func combinations<T>(
     _ base: T,
     wildcardPaths: [WildcardPath<T>] = []
 ) -> [T] {

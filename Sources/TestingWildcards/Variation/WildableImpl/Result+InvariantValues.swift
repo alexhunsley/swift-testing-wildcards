@@ -1,4 +1,4 @@
-extension Result: InvariantValues where Success: InvariantValues & Equatable, Failure: InvariantValues & Equatable {
+extension Result: Wildable where Success: Wildable & Equatable, Failure: Wildable & Equatable {
     public static var allValues: AnySequence<Result<Success, Failure>> {
         let successVariants = Success.allValues.map { successAllValues in Result { successAllValues } }
 

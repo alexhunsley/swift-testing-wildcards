@@ -1,6 +1,6 @@
 import TestingWildcards
 
-enum Mode: CaseIterable, Equatable, InvariantValues, CustomStringConvertible {
+enum Mode: CaseIterable, Equatable, Wildable, CustomStringConvertible {
     case alpha, beta, gamma
 
     var description: String {
@@ -27,7 +27,7 @@ struct FilePermission: OptionSet, InvariantOptionSet {
 }
 
 // TODO rename InvariantValues!
-struct MyType: InvariantValues, Equatable {
+struct MyType: Wildable, Equatable {
     static var allValues: AnySequence<MyType> {
         AnySequence<Self>([Self(comment: "", enabled: false),
                            Self(comment: "", enabled: true)])

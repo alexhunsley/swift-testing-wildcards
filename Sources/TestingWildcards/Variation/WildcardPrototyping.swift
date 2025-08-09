@@ -6,13 +6,13 @@ public extension WildcardPrototyping {
     func variants(
         _ wildcardPaths: WildcardPath<Self>...
     ) -> [Self] {
-        invariantCombinations(self, wildcardPaths: wildcardPaths)
+        combinations(self, wildcardPaths: wildcardPaths)
     }
 
     static func variants(
         _ wildcardPaths: WildcardPath<Self>...
     ) -> [Self] {
-        invariantCombinations(Self(), wildcardPaths: wildcardPaths)
+        combinations(Self(), wildcardPaths: wildcardPaths)
     }
 
     /// for retrieving all variants as a (single item) list of lists; particularly useful
@@ -20,12 +20,12 @@ public extension WildcardPrototyping {
     func variantsList(
         _ wildcardPaths: WildcardPath<Self>...
     ) -> [[Self]] {
-        [invariantCombinations(self, wildcardPaths: wildcardPaths)]
+        [combinations(self, wildcardPaths: wildcardPaths)]
     }
 
     static func variantsList(
         _ wildcardPaths: WildcardPath<Self>...
     ) -> [[Self]] {
-        [invariantCombinations(Self(), wildcardPaths: wildcardPaths)]
+        [combinations(Self(), wildcardPaths: wildcardPaths)]
     }
 }
