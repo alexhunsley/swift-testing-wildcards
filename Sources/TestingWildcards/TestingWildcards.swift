@@ -36,7 +36,7 @@ public struct VaryingKeyPath<Root> {
         self.values = AnySequence(values.map { $0 as Any })
     }
 
-    /// From a type conforming to `InvariantValues`
+    /// From a type conforming to `Wildable`
     public init<Value: Wildable>(
         _ keyPath: WritableKeyPath<Root, Value>
     ) {

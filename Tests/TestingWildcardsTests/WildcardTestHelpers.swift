@@ -12,7 +12,7 @@ enum Mode: CaseIterable, Equatable, Wildable, CustomStringConvertible {
     }
 }
 
-struct FilePermission: OptionSet, InvariantOptionSet {
+struct FilePermission: OptionSet, WildableOptionSet {
     let rawValue: Int
 
     static let read    = FilePermission(rawValue: 1 << 0)
@@ -26,7 +26,6 @@ struct FilePermission: OptionSet, InvariantOptionSet {
     }
 }
 
-// TODO rename InvariantValues!
 struct MyType: Wildable, Equatable {
     static var allValues: AnySequence<MyType> {
         AnySequence<Self>([Self(comment: "", enabled: false),
