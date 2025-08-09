@@ -71,16 +71,22 @@ final class TestingWildcardsTests {
         #expect(example.mode != .alpha && example.a != 11)
     }
 
+    // includes example of a custom type implementing InvariantValues so
+    // we can use it with .wild
     @Test(arguments:
             Example(name: "bob", flag: false, mode: .alpha, count: 0)
                 .variantsList(
                     .wild(\.flag),
                     .wild(\.mode),
+                    .wild(\.myType), // a custom type that implements InvariantValues
                     .values(\.count, [0, 5])
+// if you try wild where you shouldn't you get:
+// Cannot convert value of type 'WritableKeyPath<Example, Int>' to expected argument type 'VariantKeyPath<Example>'
+//                    .wild(\Example.count)
             )
     )
     func usingManualPrototype(examples: [Example]) {
-        #expect(examples.count == 12)
+        #expect(examples.count == 24)
         #expect(examples.contains(where: {
             $0.flag == false && $0.mode == .alpha
         }))

@@ -26,6 +26,17 @@ struct FilePermission: OptionSet, InvariantOptionSet {
     }
 }
 
+// TODO rename InvariantValues!
+struct MyType: InvariantValues, Equatable {
+    static var allValues: AnySequence<MyType> {
+        AnySequence<Self>([Self(comment: "", enabled: false),
+                           Self(comment: "", enabled: true)])
+    }
+
+    let comment: String
+    let enabled: Bool
+}
+
 struct Example: WildcardPrototyping, CustomStringConvertible {
     // recommended pattern -- set all properties values to default values
     // and get no-param init for free
@@ -38,6 +49,7 @@ struct Example: WildcardPrototyping, CustomStringConvertible {
     var c: Int = 0
     var filePermission: FilePermission = .all
     var error: SomeError? = nil
+    var myType: MyType = .init(comment: "", enabled: false)
 
     var result: Result<Bool, SomeError> = .success(false)
     var resultOptionalSuccess: Result<Bool?, SomeError> = .success(false)
